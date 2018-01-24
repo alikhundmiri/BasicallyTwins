@@ -1,0 +1,1 @@
+web: gunicorn basicallytwins.wsgi --log-file -

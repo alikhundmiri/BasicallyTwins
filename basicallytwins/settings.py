@@ -20,12 +20,17 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/2.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = '@m=d0_a5fx4#fasajn1lcl40mc#_dag#y$!g)=_gs1nau41(t('
+SECRET_KEY = os.environ.get('SECRET_KEY', '@m=d0_a5fx4#fasajn1lcl40mc#_dag#y$!g)=_gs1nau41(t(')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [
+'https://basically-twins.herokuapp.com/',
+'http://basically-twins.herokuapp.com/', 
+'http://127.0.0.1:8000/',
+'127.0.0.1:8000/'
+]
 
 
 # Application definition
@@ -87,6 +92,9 @@ DATABASES = {
         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
     }
 }
+import dj_database_url
+db_from_env = dj_database_url.config(conn_max_age=500)
+DATABASES['default'].update(db_from_env)
 
 
 # Password validation
@@ -113,7 +121,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Asia/Kolkata'
 
 USE_I18N = True
 
@@ -126,15 +134,65 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/2.0/howto/static-files/
 
 # Local files
-STATIC_URL = '/static/'
+# STATIC_URL = '/static/'
 
-# Copy data from here to server
+# # Copy data from here to server
+# STATICFILES_DIRS = [
+#     os.path.join(BASE_DIR, "static"),
+#     #'/var/www/static/',
+# ]
+# # Server emmumator. One up DIR
+# STATIC_ROOT = os.path.join(os.path.dirname(BASE_DIR), "static_cdn")
+
+# MEDIA_URL = "/media_cdn/"
+# MEDIA_ROOT = os.path.join(os.path.dirname(BASE_DIR), "media_cdn")
+
+########################################################################################
+
+
+
+AWS_STORAGE_BUCKET_NAME = 'basically-twins'
+
+AWS_ACCESS_KEY_ID = os.environ.get('S3_KEY', 'AKIAJV3FGJ2PWUAVOBEQ')
+AWS_SECRET_ACCESS_KEY = os.environ.get('S3_SECRET', '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')
+# Tell django-storages that when coming up with the URL for an item in S3 storage, keep
+# it simple - just use this domain plus the path. (If this isn't set, things get complicated).
+# This controls how the `static` template tag from `staticfiles` gets expanded, if you're using it.
+# We also use it in the next setting.
+AWS_S3_CUSTOM_DOMAIN = '%s.s3.amazonaws.com' % AWS_STORAGE_BUCKET_NAME
+
+# NOW REPLACING THESE LINES TO USE OUR S3 BUCKET MORE ELEGANTLY.
+# NOW WE WILL HAVE /static/ FOLDER FOR STATIC FILES, /media/ FOR OUR MEDIA FILES
+
+# # This is used by the `static` template tag from `static`, if you're using that. Or if anything else
+# # refers directly to STATIC_URL. So it's safest to always set it.
+# STATIC_URL = "https://%s/" % AWS_S3_CUSTOM_DOMAIN
+#
+# # Tell the staticfiles app to use S3Boto storage when writing the collected static files (when
+# # you run `collectstatic`).
+# STATICFILES_STORAGE = 'storages.backends.s3boto.S3BotoStorage'
+
+
+# Grab all the files from here, and put them in the S3 Bucket!!
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, "static"),
-    #'/var/www/static/',
 ]
-# Server emmumator. One up DIR
-STATIC_ROOT = os.path.join(os.path.dirname(BASE_DIR), "static_cdn")
+# Added this on 19th August. After learning from experiments on Ritrew app.
 
-MEDIA_URL = "/media_cdn/"
-MEDIA_ROOT = os.path.join(os.path.dirname(BASE_DIR), "media_cdn")
+
+# I JUST ADDED A FILE NAMED cumstom_storages.py IN THE SAME DIRECTORY AS manage.oy
+STATICFILES_LOCATION = 'static'
+STATICFILES_STORAGE = 'custom_storages.StaticStorage'
+STATIC_URL = "https://%s/%s/" % (AWS_S3_CUSTOM_DOMAIN, STATICFILES_LOCATION)
+
+# FROM HERE IS THE SETTINGS FOR MEDIA FILES
+MEDIAFILES_LOCATION = 'media'
+MEDIA_URL = "https://%s/%s/" % (AWS_S3_CUSTOM_DOMAIN, MEDIAFILES_LOCATION)
+DEFAULT_FILE_STORAGE = 'custom_storages.MediaStorage'
+
+# THESE LINES WILL SAY THE EXPIRATION OF THIS DATA HAS NOT YET COME, SO USE THESE TILL IT EXPIRES.
+AWS_HEADERS = {  # see http://developer.yahoo.com/performance/rules.html#expires
+    'Expires': 'Thu, 31 Dec 2099 20:00:00 GMT',
+    'Cache-Control': 'max-age=94608000',
+}
+
