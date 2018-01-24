@@ -33,6 +33,7 @@
 	<!-- <link rel="stylesheet" href="{% static 'fontawesome/web-fonts-with-css/css/fontawesome-all.min.css' %}"> -->
 	<link rel="stylesheet" href="{% static 'fontawesome/css/font-awesome.min.css' %}">
 	
+
 	<style>
 	footer {
 		color: white;
@@ -120,75 +121,105 @@
 
 	</style>
 
+
 	{% block header0 %}
 
 	{% endblock %}
 
-</head>
 
-<body>
-	<!-- Navigation -->
-	{% include 'navbar.html' %}
-	{% if page == 'full-page' %}
-	{% block content_2 %}
-	{% endblock %}
-	{% else %}
-	<div class="container">
-		<div class="row">
-			<div class="col-lg-9 col-md-12 col-sm-12">
-				<!-- content -->
-				{% block content_1 %}
-				{% endblock %}
-			</div>
-			<div class="col-lg-3 col-md-12 col-sm-12">
-				<!-- content advert -->
-				<div class="row">
-					<div class="col">
-						<p class="right-top-text">Featured Products</p>
-						<!-- if featured products are available, place it, else, place our other website ad -->
-						{% if ads %}
-						{% for ad in ads %}
-						<div class="rounded advert">
-							{% if ad.image %}
-							<!-- IMAGE AD HERE -->
-							<p class="advert-sponsored for-image"><i>sponsored by {{ad.customer.product_name}}</i></p>
-							<img class="image-advert" src="{{ad.image.url}}" height="100%", width="100%">
-							{% elif ad.ad_words %}
-							<!-- TEXT AD HERE -->
-							<p class="advert-sponsored"><i>sponsored by {{ad.customer.product_name}}</i></p>
-							<p class="advert-text">{{ad.ad_words}}</p>
-							{% endif %}
-							<i><a class="right-bottom-text learn-more-text" target="_blank" href="{% url 'user:advert_redirect' ad.id %}">{{ad.advert_text}}</a></i>
-						</div>
-						{% endfor %}
-						{% endif %}
-						{% comment %}
-						<div class="rounded advert-self">
-							<p class="advert-self-text">our custom advertisment</p>
-						</div>
-						{% endcomment %}
-						<a href="
-						{% if request.user.is_authenticated %}
-						{% url 'user:all_advert' request.user.username %}
-						{% else %}
-						{% url 'login' %}
-						{% endif %}
-						" class="right-bottom-text">place your product here?</a>
-					</div>
+	<!-- Global site tag (gtag.js) - Google Analytics -->
+	<script async src="https://www.googletagmanager.com/gtag/js?id=UA-113036538-1"></script>
+	<script>
+		window.dataLayer = window.dataLayer || [];
+		function gtag(){dataLayer.push(arguments);}
+		gtag('js', new Date());
+
+		gtag('config', 'UA-113036538-1');
+	</script>
+	<!-- Facebook Pixel Code -->
+	<script>
+		!function(f,b,e,v,n,t,s)
+		{if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+			n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+			if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+			n.queue=[];t=b.createElement(e);t.async=!0;
+			t.src=v;s=b.getElementsByTagName(e)[0];
+			s.parentNode.insertBefore(t,s)}(window, document,'script',
+				'https://connect.facebook.net/en_US/fbevents.js');
+			fbq('init', '196434251100195');
+			fbq('track', 'PageView');
+		</script>
+		<noscript><img height="1" width="1" style="display:none"
+			src="https://www.facebook.com/tr?id=196434251100195&ev=PageView&noscript=1"
+			/>
+		</noscript>
+		<!-- End Facebook Pixel Code -->
+
+	</head>
+
+	<body>
+		<!-- Navigation -->
+		{% include 'navbar.html' %}
+		{% if page == 'full-page' %}
+		{% block content_2 %}
+		{% endblock %}
+		{% else %}
+		<div class="container">
+			<div class="row">
+				<div class="col-lg-9 col-md-12 col-sm-12">
+					<!-- content -->
+					{% block content_1 %}
+					{% endblock %}
 				</div>
-			</div>			
+				<div class="col-lg-3 col-md-12 col-sm-12">
+					<!-- content advert -->
+					<div class="row">
+						<div class="col">
+							<p class="right-top-text">Featured Products</p>
+							<!-- if featured products are available, place it, else, place our other website ad -->
+							{% if ads %}
+							{% for ad in ads %}
+							<div class="rounded advert">
+								{% if ad.image %}
+								<!-- IMAGE AD HERE -->
+								<p class="advert-sponsored for-image"><i>sponsored by {{ad.customer.product_name}}</i></p>
+								<img class="image-advert" src="{{ad.image.url}}" height="100%", width="100%">
+								{% elif ad.ad_words %}
+								<!-- TEXT AD HERE -->
+								<p class="advert-sponsored"><i>sponsored by {{ad.customer.product_name}}</i></p>
+								<p class="advert-text">{{ad.ad_words}}</p>
+								{% endif %}
+								<i><a class="right-bottom-text learn-more-text" target="_blank" href="{% url 'user:advert_redirect' ad.id %}">{{ad.advert_text}}</a></i>
+							</div>
+							{% endfor %}
+							{% endif %}
+							{% comment %}
+							<div class="rounded advert-self">
+								<p class="advert-self-text">our custom advertisment</p>
+							</div>
+							{% endcomment %}
+							<a href="
+							{% if request.user.is_authenticated %}
+							{% url 'user:all_advert' request.user.username %}
+							{% else %}
+							{% url 'login' %}
+							{% endif %}
+							" class="right-bottom-text">place your product here?</a>
+						</div>
+					</div>
+				</div>			
+			</div>
 		</div>
-	</div>
-	{% endif %}
+		{% endif %}
 
-	<!-- footer -->
-	<div style="margin-top: 20px"></div>
-	{% include 'footer.html' %}
+		<!-- footer -->
+		<div style="margin-top: 20px"></div>
+		{% include 'footer.html' %}
 
-	<!-- Bootstrap core JavaScript -->
-	<script src="{% static 'base/vendor/jquery/jquery.min.js' %}"></script>
-	<script src="{% static 'base/vendor/bootstrap/js/bootstrap.bundle.js' %}"></script>
-	<script src="{% static 'base/vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
-</body>
+		<!-- Bootstrap core JavaScript -->
+		<script src="{% static 'base/vendor/jquery/jquery.min.js' %}"></script>
+		<script src="{% static 'base/vendor/bootstrap/js/bootstrap.bundle.js' %}"></script>
+		<script src="{% static 'base/vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+	</body>
 
-</html>
+	</html>
