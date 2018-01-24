@@ -1,0 +1,194 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+	<meta name="description" content="">
+	<meta name="author" content="">
+
+	<title>
+		{% block title %} 
+		Basically Twins | Because Free Market.
+		{% endblock %}
+	</title>
+	<!-- Bootstrap core CSS -->
+	<link href="{% static 'base/vendor/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
+
+	<!-- Custom fonts for this template -->
+	<link href="https://fonts.googleapis.com/css?family=Catamaran:100,200,300,400,500,600,700,800,900" rel="stylesheet">
+	<link href="https://fonts.googleapis.com/css?family=Lato:100,100i,300,300i,400,400i,700,700i,900,900i" rel="stylesheet">
+
+	<!-- Custom styles for this template -->
+	<link href="{% static 'base/css/one-page-wonder.min.css' %}" rel="stylesheet">
+	
+	<!-- <script src="https://use.fontawesome.com/68ce4998e5.js"></script> -->
+	<!-- <script src="https://use.fontawesome.com/3cfe1a3a89.js"></script> -->
+
+	<!-- <link rel="stylesheet" href="{% static 'fontawesome/web-fonts-with-css/css/fontawesome.min.css' %}"> -->
+	<!-- <link rel="stylesheet" href="{% static 'fontawesome/web-fonts-with-css/css/fontawesome.css' %}"> -->
+	
+	<!-- <link rel="stylesheet" href="{% static 'fontawesome/web-fonts-with-css/css/fontawesome-all.min.css' %}"> -->
+	<link rel="stylesheet" href="{% static 'fontawesome/css/font-awesome.min.css' %}">
+	
+	<style>
+	footer {
+		color: white;
+	}
+	body {
+		/*overflow: hidden;*/
+		padding-top: 100px;
+		/*background: #331832 !important;*/
+			/* Adding !important forces the browser to overwrite the default style 
+			applied by Bootstrap */
+			/*color : #FCEAEA;*/
+			/*Div of Cards, align center */
+			/*display:flex;*/
+		}
+		p.right-top-text{
+			color: #28262C;
+		}
+		a.right-bottom-text{
+			color: #9C9C9C;
+			text-decoration: none;
+		}
+		a.right-bottom-text:hover{
+			color: #4F4268;
+			text-decoration: none;
+		}
+		a.right-bottom-text:active{
+			color: #211D28;
+			text-decoration: none;
+		}
+
+		.product-line:nth-child(odd) {
+			background: #FFF2F1;
+		}
+
+		.product-line:nth-child(even) {
+			background: #FFF2FF;
+		}
+
+		div.advert-self {
+			height: 150px;
+			width: 300px;
+			margin-top: 20px;
+			vertical-align: middle;
+			text-align: center;
+			background: #FFF6F1;
+		}
+		div.advert {
+			width: 100%;
+			margin-bottom: 20px;
+			vertical-align: middle;
+			text-align: center;
+		}
+
+		div.advert:nth-child(3n+0) {
+			background: #FFF6F1;
+		}
+
+		div.advert:nth-child(3n+1) {
+			background: #FFF2F1;
+		}
+
+		div.advert:nth-child(3n+2) {
+			background: #FFD2F1;
+		}
+		
+		p.advert-text{
+			padding-top: 0px;
+		}
+		.learn-more-text{
+			padding-bottom: 20px;
+		}
+		img.image-advert{
+			height: 100%;
+			width: 100%;
+			padding: 5px;
+			padding-top: 0px;
+			box-shadow: currentColor;
+		}
+		p.advert-sponsored{
+			font-size: 12px; 
+			text-align:right; 
+			margin-right: 5px;
+			color: #9C9C9C;
+		}
+
+	</style>
+
+	{% block header0 %}
+
+	{% endblock %}
+
+</head>
+
+<body>
+	<!-- Navigation -->
+	{% include 'navbar.html' %}
+	{% if page == 'full-page' %}
+	{% block content_2 %}
+	{% endblock %}
+	{% else %}
+	<div class="container">
+		<div class="row">
+			<div class="col-lg-9 col-md-12 col-sm-12">
+				<!-- content -->
+				{% block content_1 %}
+				{% endblock %}
+			</div>
+			<div class="col-lg-3 col-md-12 col-sm-12">
+				<!-- content advert -->
+				<div class="row">
+					<div class="col">
+						<p class="right-top-text">Featured Products</p>
+						<!-- if featured products are available, place it, else, place our other website ad -->
+						{% if ads %}
+						{% for ad in ads %}
+						<div class="rounded advert">
+							{% if ad.image %}
+							<!-- IMAGE AD HERE -->
+							<p class="advert-sponsored for-image"><i>sponsored by {{ad.customer.product_name}}</i></p>
+							<img class="image-advert" src="{{ad.image.url}}" height="100%", width="100%">
+							{% elif ad.ad_words %}
+							<!-- TEXT AD HERE -->
+							<p class="advert-sponsored"><i>sponsored by {{ad.customer.product_name}}</i></p>
+							<p class="advert-text">{{ad.ad_words}}</p>
+							{% endif %}
+							<i><a class="right-bottom-text learn-more-text" target="_blank" href="{% url 'user:advert_redirect' ad.id %}">{{ad.advert_text}}</a></i>
+						</div>
+						{% endfor %}
+						{% endif %}
+						{% comment %}
+						<div class="rounded advert-self">
+							<p class="advert-self-text">our custom advertisment</p>
+						</div>
+						{% endcomment %}
+						<a href="
+						{% if request.user.is_authenticated %}
+						{% url 'user:all_advert' request.user.username %}
+						{% else %}
+						{% url 'login' %}
+						{% endif %}
+						" class="right-bottom-text">place your product here?</a>
+					</div>
+				</div>
+			</div>			
+		</div>
+	</div>
+	{% endif %}
+
+	<!-- footer -->
+	<div style="margin-top: 20px"></div>
+	{% include 'footer.html' %}
+
+	<!-- Bootstrap core JavaScript -->
+	<script src="{% static 'base/vendor/jquery/jquery.min.js' %}"></script>
+	<script src="{% static 'base/vendor/bootstrap/js/bootstrap.bundle.js' %}"></script>
+	<script src="{% static 'base/vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+</body>
+
+</html>

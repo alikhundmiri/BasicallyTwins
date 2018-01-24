@@ -1,0 +1,157 @@
+{% extends 'index.html' %}
+{% load static %}
+
+
+{% block title %}
+Page Text | {{ block.super }}
+{% endblock %}
+
+{% block header0 %}
+<style type="text/css">
+div.price-sheet{
+	min-height: 200px;
+	width: 100%;
+	border-radius: 10px;
+	background: #1E1E24;
+	margin: 20px;
+	color: white;
+	text-align: center;
+}
+div.price-sheet .title-row{
+	border-radius: 10px 10px 0px 0px;
+	padding-top: 20px;
+	background: #92140C;
+}
+div.price-sheet .decription-row{
+	margin-top: 20px;
+	margin-bottom: 20px;
+}
+
+div.hide-this {
+	visibility: collapse;
+}
+</style>
+{% endblock %}
+
+{% block content_1 %}
+<div class="row">
+	<div class="col">
+
+		<a class="pull-left">
+			<h3>
+				Adverts
+			</h3>
+		</a>
+		<a style="margin-bottom: 20px" href="{% url 'user:create_advert' request.user.username %}" class="btn btn-outline-primary btn-lg pull-right" role="button">Create new advert</a>
+	</div>
+</div>
+
+<table class="table table-striped">
+	<thead>
+		<tr>
+			<th>Advert ID</th>
+			<th>Product</th>
+			<th>Last Updated</th>
+			<th>Viewed</th>
+			<th>Clicked</th>
+			<th>Advert Lifespan</th>
+			<th>Status</th>
+		</tr>
+	</thead>
+	<tbody>
+		{% for advert in all_adverts %}
+		<tr>
+			<td>{{advert.id}}</td>
+			<td>{{advert.customer.product_name}}</td>
+			<td>{{advert.updated}}</td>
+			<td>{{advert.advert_view}}</td>
+			<td>{{advert.current_clicks}}</td>
+			<td>{{advert.advert_lifespan}} Day{{ advert.advert_lifespan|pluralize }}</td>
+			<td>{{advert.advert_status}}</td>
+		</tr>
+		{% empty %}
+		<td colspan="7"><p class="lead" style="text-align: center;">You have not placed any adverts yet.</p></td>
+		{% endfor %}
+	</tbody>
+</table>
+<section>
+	<div class="row">
+		<div class="col">
+			<h3>Price Sheet</h3>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-lg-3 col-md-3 col-sm-12 price-sheet">
+			<div class="row title-row">
+				<div class="col">
+					<h4>One day</h4>
+					<i class="fa fa-star" aria-hidden="true"></i>
+
+					<p style="visibility: hidden;">Small Shots</p>
+				</div>
+			</div>
+			<div class="row description-row">
+				<div class="col">
+					<p class="lead"><b>1</b> day</p>
+				</div>
+			</div>
+			<div class="row description-row">
+				<div class="col">
+					<p class="lead">$5</p>
+				</div>
+				
+			</div>
+		</div>
+
+
+		<div class="col-lg-4 col-md-3 col-sm-12 price-sheet">
+			<div class="row title-row">
+				<div class="col">
+					<h4>Single Week</h4>
+					<i class="fa fa-star" aria-hidden="true"></i>
+					<i class="fa fa-star" aria-hidden="true"></i>
+					<i class="fa fa-star" aria-hidden="true"></i>
+					<p>Best Value</p>
+				</div>
+			</div>
+			<div class="row description-row">
+				<div class="col">
+					<p class="lead"><b>7</b> days</p>
+				</div>
+			</div>
+			<div class="row description-row">
+				<div class="col">
+					<p class="lead">$25</p>
+				</div>
+				
+			</div>
+		</div>
+
+
+		<div class="col-lg-3 col-md-3 col-sm-12 price-sheet">
+			<div class="row title-row">
+				<div class="col">
+					<h4>A Month</h4>
+					<i class="fa fa-star" aria-hidden="true"></i>
+					<i class="fa fa-star" aria-hidden="true"></i>
+
+					<p style="visibility: hidden;">Long term</p>					
+				</div>
+			</div>
+			<div class="row description-row">
+				<div class="col">
+					<p class="lead"><b>30</b> days</p>
+				</div>
+			</div>
+			<div class="row description-row">
+				<div class="col">
+					<p class="lead">$140</p>
+				</div>
+				
+			</div>
+		</div>
+
+
+	</div>
+</section>
+{% endblock %}

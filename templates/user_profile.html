@@ -1,0 +1,64 @@
+{% extends 'index.html' %}
+{% load static %}
+
+
+{% block title %}
+User Profile | {{ block.super }}
+{% endblock %}
+
+
+{% block header0 %}
+<style type="text/css">
+.product-line{
+	padding: 20px
+}
+.product-line:nth-child(odd){
+	background: #FFF2F1;
+}
+.product-line:nth-child(even){
+	background: #FFF2FF;
+}
+
+</style>
+{% endblock %}
+
+
+{% block content_1 %}
+<div class="row">
+	<div class="col">
+
+		<a class="pull-left">
+			<h3>
+				{{request.user.username}}
+			</h3>
+		</a>
+		<a style="margin: 5px" href="{% url 'user:create_product' request.user.username %}" class="btn btn-outline-dark btn-lg pull-right" role="button">Add new Product</a>
+		<a style="margin: 5px" href="{% url 'user:create_advert' request.user.username %}" class="btn btn-outline-primary btn-lg pull-right" role="button">Create new advert</a>
+
+	</div>
+</div>
+<div class="row">
+	<div class="col">
+		<h3></h3>
+		<!-- <p class="lead">@twitter</p> -->
+		{% for product in products %}
+		<div class="row">
+			<div class="col rounded product-line" style="">
+				<h4><a href="{{product.get_absolute_url}}">{{product.product_name}}</a>
+					<br>
+					<small>
+						{{product.product_pitch}}
+					</small>
+				</h4>
+				
+			</div>
+		</div>
+		<br>
+		{% empty %}
+		<p><small>No Products yet</small></p>
+		{% endfor %}
+	</div>
+</div>
+
+
+{% endblock %}

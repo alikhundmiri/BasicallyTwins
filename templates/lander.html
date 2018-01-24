@@ -1,0 +1,122 @@
+{% extends 'index.html' %}
+{% load static %}
+{% load crispy_forms_tags %}
+
+{% block header0 %}
+{{ form.media }}
+
+<style>
+body {
+	padding-top: 0px !important;
+}
+p {
+	line-height: 200%;
+
+}
+</style>
+{% endblock %}
+{% block content_2 %}
+<header class="masthead text-center text-white">
+	<div class="masthead-content">
+		<div class="container">
+			<h1 class="masthead-heading mb-0">Basically Twins</h1>
+			<h4 class="masthead-subheading mb-0">Not all ideas are unique</h4>
+			<a href="{% url 'user:home' %}" class="btn btn-primary btn-xl rounded-pill mt-5">Check out the website</a>
+		</div>
+	</div>
+	<div class="bg-circle-1 bg-circle"></div>
+	<div class="bg-circle-2 bg-circle"></div>
+	<div class="bg-circle-3 bg-circle"></div>
+	<div class="bg-circle-4 bg-circle"></div>
+</header>
+
+<section>
+	<div class="container">
+		<div class="row align-items-center">
+			<div class="col-lg-6 order-lg-2">
+				<div class="p-5">
+					<img class="img-fluid rounded-circle" src="{% static 'base/img/04.jpeg' %}" alt="">
+				</div>
+			</div>
+			<div class="col-lg-6 order-lg-1">
+				<div class="p-5">
+					<h2 class="display-5">The <i>What</i> and The <i>Why</i>.</h2>
+					<p>Every time I plan to create a new project, turns out there is someone else doing the same thing, and there is no way I can go head-to-head against them. <br>This forces me to do more deep study of the market to understand if its worth investing my time developing this product.<br><br> That's why Basically Twins was created, which as the name suggests, will show you the products which are very much similar to other mainstream products, but they have their own identity.</p>
+
+				</div>
+			</div>
+		</div>
+	</div>
+</section>
+
+<section>
+	<div class="container">
+		<div class="row align-items-center">
+			<div class="col-lg-6">
+				<div class="p-5">
+					<h2 class="display-5">Why we need this website</h2>
+					<p>We do not have to limit our self with a small piece of pie, when we can make as many pies as we like.</p>
+					<br>
+					<p>This crowd based website will hold the database to this massive community and our awesome products which solve problems ranging from daily work to automation.</p>
+					<hr>
+					<p>Check out this cool tweet by <a href="https://twitter.com/sehurlburt/">Stephanie Hurlburt</a></p>
+				</div>
+			</div>
+			<div class="col-lg-6">
+				<div class="p-5">
+					<!-- <img class="img-fluid rounded-circle" src="{% static 'base/img/02.jpg' %}" alt=""> -->
+					<blockquote class="twitter-tweet" data-lang="en"><p lang="en" dir="ltr">I want to highlight this point:<br><br>There is enough room for 10 or even 100 people to exist in their own companies and make enough money to make a living while ALL MAKING THE SAME THING<br><br>So stop worrying about needing some magical unique idea no one else has and focus on business <a href="https://t.co/tYzmjfUXpa">https://t.co/tYzmjfUXpa</a></p>&mdash; Stephanie Hurlburt (@sehurlburt) <a href="https://twitter.com/sehurlburt/status/952013506273923072?ref_src=twsrc%5Etfw">January 13, 2018</a></blockquote>
+					<script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>					
+				</div>
+			</div>
+		</div>
+	</div>
+</section>
+
+<section>
+	<div class="container">
+		<div class="row align-items-center">
+			<div class="col-lg-6 order-lg-2">
+				<div class="p-5">
+					<img class="img-fluid rounded-circle" src="{% static 'base/img/03.jpg' %}" alt="">
+				</div>
+			</div>
+			<div class="col-lg-6 order-lg-1">
+				<div class="p-5">
+					<h2 class="display-5">How can this site help you?</h2>
+					<p>With this website's crowd sourcing ability we can estimate the size of market for any idea by evaluating the size, growth and competition within existing players.<br><br>
+					With such a tool, it will be much easier for companies, startup, bootstrappers and Venture Capitalist to validate new markets before even starting to build their product.</p>
+				</div>
+			</div>
+		</div>
+	</div>
+</section>
+<section>
+	<div class="container">
+		<div class="row align-items-center text-center">
+			<div class="col-lg-12">
+				
+			</div>
+		</div>
+		<div class="row align-items-center">
+			<div class="col-lg-6">
+				<div class="p-5">
+					<h4>Take a look!</h4>
+					<a href="{% url 'user:home' %}" class="btn btn-primary btn-xl rounded-pill mt-5">Check out the website</a>
+					<a href="{% url 'user:home' %}" class="btn btn-primary btn-xl rounded-pill mt-5">Signup</a>
+					<a href="{% url 'user:home' %}" class="btn btn-primary btn-xl rounded-pill mt-5">Login</a>
+				</div>
+			</div>
+			<div class="col-lg-6">
+				<div class="p-5">
+					<h4>Be a part of our community!</h4>
+					<form method='POST' action='' enctype='multipart/form-data'>{% csrf_token %}
+						{{ form|crispy }}
+						<input type='submit' class='btn btn-outline-primary btn-lg' value='Keep me Updated'/>
+					</div>
+				</div>	
+			</div>		
+		</div>
+
+	</section>
+	{% endblock %}

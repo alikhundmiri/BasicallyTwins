@@ -1,0 +1,183 @@
+{% extends 'index.html' %}
+{% load static %}
+
+
+{% block title %}
+{{ block.super }}
+{% endblock %}
+
+{% block header0 %}
+<style type="text/css">
+.product-line {
+	min-height: 150px;
+	width: 100%;
+	margin-bottom: 20px;
+	padding: 20px;
+}
+
+.product-line:nth-child(odd) {
+	background: #FFF2F1;
+}
+
+.product-line:nth-child(even) {
+	background: #FFF2FF;
+}
+.product-image {
+	height: 140px;
+	width: 140px;
+}
+.product-details {
+	margin-left: 20px;
+
+}
+a.product-website-link{
+	color: #28262C;
+}
+div.tags-div{
+	padding-top: 10px; 
+	background: red;
+}
+.product-line:nth-child(odd) .tags-div{
+	background: #FFF2F3;
+}
+.product-line:nth-child(even) .tags-div{
+	background: #FFF4FF;
+}
+div.product-link-list{
+	background: rgba(255, 255, 255, 1);
+	outline: thick;
+	padding-top: 0px;
+	padding-bottom: 0px;
+	padding-left: 5px;
+	padding-right: 5px;
+}
+
+</style>
+{% endblock %}
+
+{% block content_1 %}
+<div class="row">
+	<div class="col-lg-12">
+		<form method="get" action="">			
+			<div class="input-group">
+				<input type="text" name="q" class="form-control" placeholder="Search Products"
+				value="{{ request.GET.q }}">
+				<button class="btn btn-outline-default btn-sm" type="submit" value="Search">search</button>
+
+			</div><!-- /input-group -->
+		</form>
+	</div>
+</div>
+<div class="row" style="margin-top: 20px">
+	<div class="col">
+		<h3>Products</h3>
+		{% if products_ %}
+		{% for product in products_ %}
+		<div class="row product-line rounded">
+			<div class="product-image">
+				<img  class="rounded" src="https://placeimg.com/140/140/tech/grayscale">
+			</div>
+			<div class="col">
+				<div class="product-details">
+					<div class="row">
+						<div class="col" style="float: left;">
+							<a class="product-website-link" href="{{ product.get_absolute_url }}">
+								<p class="lead">{{product.product_name}}</p>
+							</a>
+						</div>
+					</div>
+					<!-- Product URLs -->
+					<div class="row" style="margin-left: 0px">
+						<div class="product-link-list rounded" style="float: right;">
+							{% for link in links_ %}
+							{% if link.social_connection == product %}
+							{% if link.get_platform_display == 'ios' %}
+							
+							<a href="{{link.link}}" target="_blank"><i class="fa fa-lg fa-apple" style="margin: 5px"></i></a>
+							{% endif %}
+
+							{% if link.get_platform_display == 'android' %}
+							<a href="{{link.link}}" target="_blank"><i class="fa fa-lg fa-android" style="margin: 5px"></i></a>
+							{% endif %}
+
+							{% if link.get_platform_display == 'website' %}
+							<a href="{{link.link}}" target="_blank"><i class="fa fa-lg fa-home" style="margin: 5px"></i></a>
+							{% endif %}
+
+							{% if link.get_platform_display == 'chrome' %}
+							<a href="{{link.link}}" target="_blank"><i class="fa fa-lg fa-chrome" style="margin: 5px"></i></a>
+							{% endif %}
+							
+							{% endif %}
+							{% endfor %}
+							<a href="{{product.website}}" target="_blank"><i class="fa fa-lg fa-home" style="margin: 5px"></i></a>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-lg-12">
+							<p><b>Revenue: </b>${{product.monthly_revenue}}/month</p>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="col">
+				<div class="product-twin">
+					<div class="row">
+						<div style="float: right;">
+							<div class="col-lg-12">
+								<p>Basically a twin of:</p>
+								{% for twin in product.twin.all %}
+								<a href="{{twin.get_absolute_url}}" class="btn btn-outline-secondary btn-sm" role="button">{{ twin.product_name }}</a>
+								{% empty %}
+								<a href="" class="btn btn-outline-primary btn-sm" role="button">
+								This product is unique!</a>
+								{% endfor %}
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="col-lg-12 tags-div" style="visibility: hidden;">
+				<div class="row">
+					<div class="col-lg-12">
+						<a href="">Tags</a>
+						{% if product.tag %}
+						{% for tag in product.tag.all %}
+						<a style="margin-right: 5px" href="" class="btn btn-outline-primary btn-sm" role="button">{{ tag.tag }}</a>
+						{% endfor %}
+						{% endif %}
+					</div>
+				</div>
+			</div>
+		</div>
+
+		{% endfor %}
+		{% endif %}
+	</div>
+</div>
+<div class="row">
+	{% if products_ %}
+	<div class="pagination col-lg-12">
+		<ul class="step-links pager">
+			{% if products_.has_previous %}
+			<li><a href="?{{ page_request_var }}=
+
+				{{ products_.previous_page_number }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}">Newer</a>
+			</li>
+			{% endif %}
+
+			<span class="current">
+				Page {{ products_.number }} of {{ products_.paginator.num_pages }}.
+			</span>
+
+			{% if products_.has_next %}
+			<li><a href="?{{ page_request_var }}=
+				{{ products_.next_page_number }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}">Older</a>
+			</li>
+			{% endif %}
+		</ul>
+	</div>
+	{% endif %}
+</div>
+
+{% endblock %}
