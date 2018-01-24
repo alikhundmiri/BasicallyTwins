@@ -28,6 +28,7 @@ DEBUG = True
 ALLOWED_HOSTS = [
 'https://basically-twins.herokuapp.com/',
 'http://basically-twins.herokuapp.com/', 
+'basically-twins.herokuapp.com',
 'http://127.0.0.1:8000/',
 '127.0.0.1:8000/'
 ]
