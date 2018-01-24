@@ -209,7 +209,7 @@ def index(request):
 import random
 
 def fetch_adverts():
-	LOAD_ADS = 3
+	LOAD_ADS = 4
 	num_list = []
 	# fetch ads
 	fetch_ = adverts.objects.filter(advert_status="Paid")
