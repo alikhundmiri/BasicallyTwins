@@ -123,10 +123,10 @@ class product_catagory(models.Model):
 	slug				=			models.SlugField(unique=True)
 	# This field is to parse common words from the connected product's pitch.
 	popular				=			models.TextField(max_length=1000, blank=True, null=True)
-	UserBase			=			models.IntegerField(blank=True, null=True)
-	total_revenue		= 			models.IntegerField(blank=True, null=True)
-	avg_revenue			= 			models.IntegerField(blank=True, null=True)
-	high_revenue		= 			models.IntegerField(blank=True, null=True)
+	UserBase			=			models.IntegerField(blank=True, null=True, default='0')
+	total_revenue		= 			models.IntegerField(blank=True, null=True, default='0')
+	avg_revenue			= 			models.IntegerField(blank=True, null=True, default='0')
+	high_revenue		= 			models.IntegerField(blank=True, null=True, default='0')
 	timestamp			=			models.DateTimeField(auto_now=False, auto_now_add=True)
 	updated				=			models.DateTimeField(auto_now=True, auto_now_add=False)
 

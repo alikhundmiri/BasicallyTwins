@@ -53,6 +53,7 @@ INSTALLED_APPS = [
     'widget_tweaks'
 
 ]
+
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
 MIDDLEWARE = [
