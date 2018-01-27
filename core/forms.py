@@ -14,6 +14,7 @@ class ProductForm(forms.ModelForm):
         fields = [
         "product_name",
         "product_pitch",
+        "catagory",
         "monthly_revenue",
         "website",
         "twin",

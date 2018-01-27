@@ -14,6 +14,8 @@
 		Basically Twins | Because Free Market.
 		{% endblock %}
 	</title>
+	<link rel="shortcut icon" type="image/png" href="{% static 'base/favicon/favicon.ico' %}"/>
+
 	<!-- Bootstrap core CSS -->
 	<link href="{% static 'base/vendor/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
 
@@ -126,7 +128,7 @@
 
 	{% endblock %}
 
-
+	
 	<!-- Global site tag (gtag.js) - Google Analytics -->
 	<script async src="https://www.googletagmanager.com/gtag/js?id=UA-113036538-1"></script>
 	<script>
@@ -204,7 +206,8 @@
 							{% else %}
 							{% url 'login' %}
 							{% endif %}
-							" class="right-bottom-text">place your product here?</a>
+							" class="btn btn-dark btn-sm" style="float: right">Buy Ad space</a>
+							
 						</div>
 					</div>
 				</div>			

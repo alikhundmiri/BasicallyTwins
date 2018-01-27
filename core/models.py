@@ -38,6 +38,10 @@ class links(models.Model):
 	def __str__(self):
 		return (str(self.platform) + str(" for ") + str(self.social_connection))
 
+	class Meta:
+		verbose_name 		= 		"Link"
+		verbose_name_plural = 		"Links"
+
 '''
 	This is for adding Product's value interms of money
 	how did they get the money? was it VC? Angel? self financed? or all?
@@ -75,7 +79,10 @@ class tags(models.Model):
 	def __str__(self):
 		return (str(self.tag))
 	class Meta:
-		ordering 	=		["-timestamp", "-updated"]
+		ordering 			=		["-timestamp", "-updated"]
+		verbose_name 		= 		"Tag"
+		verbose_name_plural = 		"Tags"
+
 
 '''
 	Each product is a website which has completed the following 
@@ -98,12 +105,46 @@ class email_list(models.Model):
 	def __str__(self):
 		return (str(self.email))
 	class Meta:
-		ordering 	=		["-timestamp", "-updated"]
+		ordering 			=		["-timestamp", "-updated"]
+		verbose_name 		= 		"Email List"
+		verbose_name_plural = 		"Email Lists"
+
+
+class product_catagory(models.Model):
+	PRODUCT_CAT = (
+		("Virtual Reality", "VR"),
+		("Argument Reality", "AR"),
+		("Analytics", "analytics"),
+		("Video Sharing", "video sharing"),
+		("audio books", "audio books"),
+		)
+	catagory_name		=			models.CharField(max_length=50, blank=False, null=False, default=suggest_product())
+	catagory_pitch		=			models.TextField(max_length=280, blank=True, null=True, default="Our revolutionary product will change the world", help_text="Catagory Detail")
+	slug				=			models.SlugField(unique=True)
+	# This field is to parse common words from the connected product's pitch.
+	popular				=			models.TextField(max_length=1000, blank=True, null=True)
+	UserBase			=			models.IntegerField(blank=True, null=True)
+	total_revenue		= 			models.IntegerField(blank=True, null=True)
+	avg_revenue			= 			models.IntegerField(blank=True, null=True)
+	high_revenue		= 			models.IntegerField(blank=True, null=True)
+	timestamp			=			models.DateTimeField(auto_now=False, auto_now_add=True)
+	updated				=			models.DateTimeField(auto_now=True, auto_now_add=False)
+
+	def __str__(self):
+		return(self.catagory_name)
+
+	def get_absolute_url(self):
+		return reverse("user:catagory_detail", kwargs={'slug' : self.slug})
+
+	class Meta:
+		verbose_name 		= 		"Product Catagory"
+		verbose_name_plural = 		"Product Catagories"
+
 
 
 class product(models.Model):
-	user				=			models.ForeignKey(settings.AUTH_USER_MODEL, default=1, on_delete=models.CASCADE)
 	# who is uploading this product
+	user				=			models.ForeignKey(settings.AUTH_USER_MODEL, default=1, on_delete=models.CASCADE)
 	# the product name
 	product_name		=			models.CharField(max_length=50, blank=False, null=False, default=suggest_product())
 	product_pitch		=			models.TextField(max_length=280, blank=True, null=True, default="Our revolutionary product will change the world", help_text="Product Pitch in less than 280 character")
@@ -115,11 +156,13 @@ class product(models.Model):
 	twin				=			models.ManyToManyField('product', blank=True, help_text="Websites which are very similar to your website.")
 	tag 				=			models.ManyToManyField('tags', blank=True, help_text="Features your website offers.")
 
+	catagory 			=			models.ForeignKey(product_catagory, related_name='catagory', default=1, on_delete=models.CASCADE)
+
 	timestamp			=			models.DateTimeField(auto_now=False, auto_now_add=True)
 	updated				=			models.DateTimeField(auto_now=True, auto_now_add=False)
 
 	def __str__(self):
-		return(self.product_name + str(" - ") + self.user.username)
+		return(self.product_name + str(" By ") + self.user.username)
 
 	def get_absolute_url(self):
 		return reverse("user:product_detail", kwargs={"slug" : self.slug})
@@ -131,7 +174,10 @@ class product(models.Model):
 	# 	return reverse('user:card_delete', kwargs={"slug" : self.slug})
 
 	class Meta:
-		ordering 	=		["-timestamp", "-updated"]
+		ordering	 		=		["-timestamp", "-updated"]
+		verbose_name 		= 		"Product"
+		verbose_name_plural = 		"Products"
+
 
 """
 	class customQuestionSet(models.Model):
@@ -168,9 +214,7 @@ class product(models.Model):
 		# image
 		def __str__(self):
 			return(self.title)
-"""
 
-"""
 	class interview(models.Model):
 		user				=			models.ForeignKey(settings.AUTH_USER_MODEL, default=1, on_delete=models.CASCADE)
 		# who is giving this interview
@@ -184,7 +228,6 @@ class product(models.Model):
 """
 
 class adverts(models.Model):
-	
 	app_name = "adverts"
 	AD_STATUS = (
 		("Unpaid", 'unpaid'),
@@ -197,6 +240,7 @@ class adverts(models.Model):
 		(7, "7 Days"),
 		(28, "28 Days"),
 		)
+
 	user				=			models.ForeignKey(settings.AUTH_USER_MODEL, default=1, on_delete=models.CASCADE)
 	customer			=			models.ForeignKey('product',related_name='product_advert', on_delete=models.CASCADE)
 	ad_words			=			models.CharField(max_length=128, default=0, blank=True, null=True, help_text="Your advertisment text in 128 characters")
@@ -220,12 +264,16 @@ class adverts(models.Model):
 	max_clicks			=			models.IntegerField(default=10, blank=True, null=True)
 	advert_lifespan		=			models.IntegerField(choices=AD_LIFE, default=AD_LIFE[0][0], help_text="Number of days you want the advert to be live")
 	advert_end			=			models.DateTimeField(editable=True)
-
+	# advert_duration 	=			models.DurationField()
 	timestamp			=			models.DateTimeField(auto_now=False, auto_now_add=True)
 	updated				=			models.DateTimeField(auto_now=True, auto_now_add=False)
 	
 	def __str__(self):
 		return (str(self.customer) + str(" by ") + str(self.user.username))
+
+	class Meta:
+		verbose_name 		= 		"Advert"
+		verbose_name_plural = 		"Advertisments"
 
 """
 	# This save function when enabled, doesnt allow other ANY OTHER FIELD to be edited, 
@@ -282,5 +330,28 @@ def pre_save_tag(sender, instance, *args, **kwargs):
 	if not instance.slug:
 		instance.slug = slug_for_tag(instance)
 
+
+# SLUG FOR CATAGORY
+def slug_for_catagory(instance, new_slug=None):
+	slug = slugify(instance.catagory_name)
+	if new_slug is not None:
+		slug = new_slug
+	qs = product_catagory.objects.filter(slug=slug).order_by("-id")
+	exists = qs.exists()
+	if exists:
+		# print("slug: " + str(slug))
+		a = slug.split('-')
+		# print("a: " + str(a[0]))
+		new_slug = "%s-%s" %(a[0], qs.first().id)
+		# print("new_slug: " + str(new_slug))
+		# new_slug = "%s-%s" %(slug, qs.first().id)
+		return slug_for_catagory(instance, new_slug=new_slug)
+	return slug
+def pre_save_catagory(sender, instance, *args, **kwargs):
+	if not instance.slug:
+		instance.slug = slug_for_catagory(instance)
+
+
 pre_save.connect(pre_save_group, sender=product)
 pre_save.connect(pre_save_tag, sender=tags)
+pre_save.connect(pre_save_catagory, sender=product_catagory)

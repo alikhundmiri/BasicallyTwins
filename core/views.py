@@ -1,6 +1,6 @@
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
-from django.db.models import Q
+from django.db.models import Q, Count
 from django.forms.formsets import formset_factory
 from django.shortcuts import render, redirect, get_object_or_404, HttpResponseRedirect
 from django.http import HttpResponse, Http404
@@ -9,50 +9,13 @@ from django.urls import reverse
 from django.utils import timezone
 from datetime import datetime, timedelta
 
-from .models import product, tags, links, adverts
+from .models import product, tags, links, adverts, product_catagory
 from .forms import ProductForm, EmailForm, AdvertForm
-
-"""
-	def blog_create(request):
-	    if request.user.is_superuser:# or not request.user.is_staff or not request.user.is_superuser:
-	        pass
-	    else:
-	        raise Http404
-	    form = BlogForm(request.POST or None, request.FILES or None)
-	    if form.is_valid():
-	        instance = form.save(commit=False)
-	        # instance.user = request.user
-	        instance.save()
-	        messages.success(request, "Successfully Created")
-	        return HttpResponseRedirect(instance.get_absolute_url())
-	    context = {
-	        "nbar" : "blog",
-	        "form": form,
-	        "tab_text": "New Blog Post",
-	        "top_text": "New Blog!",
-	        "form_text": "Here you can write your blog using the tools provided below.",
-	    }
-	    return render(request, 'general_form.html', context)
-"""
-
-def user_profile(request, username=None):
-	# print(type(username))
-	products = product.objects.filter(user__username=username)
-	# for product_ in products:
-		# print(product_)
-	context = {
-		# "page" : 'full-page',
-		"products" : products,
-		"show_ads" : False,
-
-	}
-	return render(request, 'user_profile.html', context)
+import random
+from . import catagory_utils, advert_utils
 
 @login_required
 def create_product(request, username=None):
-
-	# print(request.user)
-	# print(username)
 	if not request.user.is_authenticated:
 		raise Http404
 
@@ -62,8 +25,9 @@ def create_product(request, username=None):
 		instance.user = request.user
 		instance.save()
 		form.save_m2m()
-
+		catagory_utils.set_revenue_details(instance.catagory.slug)
 		return HttpResponseRedirect(instance.get_absolute_url())
+
 	context = {
 		'form' : form,
 		"tab_text": "Submit Product",
@@ -80,33 +44,11 @@ def edit_product(request, username=None, slug=None):
 		"item" : "item",
 	}
 	return render(request, 'general_form.html', context)
-"""
 
-	@login_required
-	def blog_update(request, slug= None):
-	    instance = get_object_or_404(Post, slug=slug)
-	    if instance.user != request.user:
-	        raise Http404
-	    form = BlogForm(request.POST or None, request.FILES or None, instance = instance)
-	    if form.is_valid():
-	        instance = form.save(commit=False)
-	        instance.save()
-	        messages.success(request, "Blog Edited Successfully!!")
-	        return  HttpResponseRedirect(instance.get_absolute_url())
-	    context = {
-	        "dis_play" : "mode_174",
-	        "nbar" : "blog",
-	        "form":form,
-	        "tab_text": "Edit Blog Post",
-	        "top_text": "Editing tools",
-	        "form_text": "You can make changes to the blog here!",
-	        'this_blog': instance,
-	    }
-	    return render(request, "general_form.html", context)	
-"""
 @login_required
 def all_advert(request, username=None):
 	advert = adverts.objects.filter(user__username=username)
+
 	context = {
 		"show_ads" : True,
 		'all_adverts' : advert,
@@ -134,8 +76,8 @@ def create_advert(request, username=None):
 	context = {
 		'form' : form,
 		"tab_text": "Submit Advert",
-		"top_text": "Create New Advert!",
-		"form_text": "Please enter all the information below.",
+		"top_text": "Buy New Advert!",
+		"form_text": "Either enter the Ad words, or Upload an Image. NOT BOTH.",
 
 	}
 	return render(request, 'general_form.html', context)
@@ -157,20 +99,27 @@ def advert_redirect(request, id=None):
 		ad.current_clicks += 1
 		if timezone.now() > ad.advert_end:
 			# if the number of clicks are equal to requested clicks, turn off the advert status
-			ad_contract_completion(ad)
+			advert_utils.ad_contract_completion(ad)
 		else:
 			pass
 		ad.save()
 
 	return HttpResponseRedirect(newlink)
-	# return render(request, 'core/all_products.html', context)
 
-def ad_contract_completion(ad):
-	ad.advert_status = adverts.AD_STATUS[3][0]
-	pass
+def user_profile(request, username=None):
+	# print(type(username))
+	products = product.objects.filter(user__username=username)
+	# for product_ in products:
+		# print(product_)
+	context = {
+		# "page" : 'full-page',
+		"products" : products,
+		"show_ads" : False,
+	}
+	return render(request, 'user_profile.html', context)
 
 def index(request):
-	ads = fetch_adverts()
+	ads = advert_utils.fetch_adverts()
 	products_ = product.objects.all()
 	tags_ = tags.objects.all()
 	links_ = links.objects.all()
@@ -180,6 +129,9 @@ def index(request):
 	if query:
 		products_ = products_.filter(
 			Q(product_name__icontains=query)|
+			Q(product_pitch__icontains=query)|
+			Q(catagory__catagory_name__icontains=query)|
+			Q(catagory__catagory_pitch__icontains=query)|
 			Q(twin__product_name__icontains=query)
 		).distinct()
 
@@ -201,43 +153,68 @@ def index(request):
 		"tags_" : tags_,
 		"links_" : links_,
 		"ads" : ads,
-        "page_request_var" : page_request_var,		
+        "page_request_var" : page_request_var,
 		"show_ads" : True,
 	}
 	return render(request, 'core/all_products.html', context)
 
-import random
+def catagory_list(request):
+	all_cats = product_catagory.objects.annotate(number_of_products=Count('catagory', distinct=True))
+	"""
+	I have no idea why I am counting catagory,								^^^^^^^
+	I should be counting "product" to find out the number of products each catagory is connected. 
+	DONT CHANGE
+	"""
+	ads = advert_utils.fetch_adverts()
+	context = {
+		"all_cats" : all_cats,
+		"ads" : ads,
+		"show_ads" : True,
+	}
+	return render(request, 'core/catagory_list.html', context)
 
-def fetch_adverts():
-	LOAD_ADS = 4
-	num_list = []
-	# fetch ads
-	fetch_ = adverts.objects.filter(advert_status="Paid")
-	# fetch the total number of ads available
-	limit_ = fetch_.count()
-	if limit_ == 0:
-		return None
-	elif limit_ <= LOAD_ADS:
-		rand_ad = fetch_[:limit_]
-	else:
-		# generate 3 number from the limited range
-		num_list = random.sample(range(0, limit_), LOAD_ADS)
-		# fetch those ads
-		rand_ad = [fetch_[num] for num in num_list]
+def catagory_detail(request, slug=None):
+	this_cat = get_object_or_404(product_catagory, slug=slug)
+	products_ = product.objects.filter(catagory__slug=slug).order_by('-updated')
+	
+	total_revenue, avg_revenue, high_revenue = catagory_utils.revenue_details(this_cat, products_)
 
-	print(rand_ad)
-	# mark those ads with viewed!
-	mark_viewed(rand_ad)
-	return rand_ad
+	query = request.GET.get("q")
+	if query:
+		products_ = products_.filter(
+			Q(product_name__icontains=query)|
+			Q(product_pitch__icontains=query)|
+			Q(twin__product_name__icontains=query)
+		).distinct()
+
+	paginator = Paginator(products_, 10) # show 10 Blogs per page
+	page_request_var = "page"
+	page = request.GET.get(page_request_var)
+	try:
+		_products = paginator.page(page)
+	except PageNotAnInteger:
+		# If page is not an integer, deliver first page.
+		_products = paginator.page(1)
+	except EmptyPage:
+		# If page is out of range (e.g. 9999), deliver last page of results.
+		_products = paginator.page(paginator.num_pages)
+
+	ads = advert_utils.fetch_adverts()
+
+	context = {
+		'this_cat' : this_cat,
+		'products_' : products_,
+        "page_request_var" : page_request_var,
+    	'total_revenue' : total_revenue,
+    	'avg_revenue' : avg_revenue,
+    	'high_revenue' : high_revenue,
+    	"ads" : ads,
+		"show_ads" : True,
+	}
+	return render(request, 'core/catagory_detail.html', context)
 
 
-def mark_viewed(rand_ad):
-	for ad in rand_ad:
-		# increment the advert_view field
-		ad.advert_view += 1
-		ad.save()
-		# print(ad.advert_view)
-	pass
+
 
 
 """
@@ -252,6 +229,11 @@ def product_detail(request, slug=None):
 	market_cap = 0
 	# print("This products revenue > " + str(this_product.monthly_revenue))
 
+	# products from same catagory
+
+	this_catagory = product.objects.filter(catagory=this_product.catagory).exclude(id=this_product.id)
+	# print(this_catagory)
+
 	for g1 in this_product.twin.all():
 		market_cap += g1.monthly_revenue
 		# print("Other player's revenue > " + str(g1.monthly_revenue))
@@ -261,7 +243,7 @@ def product_detail(request, slug=None):
 		# print("Other player's revenue > " + str(g2.monthly_revenue))
 
 	# print("market revenue > " + str(market_cap))
-	ads = fetch_adverts()
+	ads = advert_utils.fetch_adverts()
 	links_ = links.objects.filter(social_connection=this_product)
 
 	context = {
@@ -269,8 +251,9 @@ def product_detail(request, slug=None):
 		"inspired_twins" : inspired_twins,
 		"links_" : links_,
 		"ads" : ads,
-		"show_ads" : True,
 		"market_cap" : market_cap,
+		'this_catagory' : this_catagory,
+		"show_ads" : False,
 	}
 	return render(request, 'core/product_detail.html', context)
 

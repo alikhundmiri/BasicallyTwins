@@ -3,7 +3,7 @@
 
 
 {% block title %}
-Page Text | {{ block.super }}
+Your Adverts | {{ block.super }}
 {% endblock %}
 
 {% block header0 %}
@@ -42,7 +42,7 @@ div.hide-this {
 				Adverts
 			</h3>
 		</a>
-		<a style="margin-bottom: 20px" href="{% url 'user:create_advert' request.user.username %}" class="btn btn-outline-primary btn-lg pull-right" role="button">Create new advert</a>
+		<a style="margin-bottom: 20px" href="{% url 'user:create_advert' request.user.username %}" class="btn btn-outline-primary btn-lg pull-right" role="button">Buy New Advert</a>
 	</div>
 </div>
 
@@ -97,10 +97,16 @@ div.hide-this {
 			</div>
 			<div class="row description-row">
 				<div class="col">
-					<p class="lead">$5</p>
+					<p class="lead">Text - $5</p>
 				</div>
 				
 			</div>
+			<div class="row description-row">
+				<div class="col">
+					<p class="lead">Image - $10</p>
+				</div>
+				
+			</div>			
 		</div>
 
 
@@ -121,10 +127,16 @@ div.hide-this {
 			</div>
 			<div class="row description-row">
 				<div class="col">
-					<p class="lead">$25</p>
+					<p class="lead">Text - $25</p>
 				</div>
 				
 			</div>
+			<div class="row description-row">
+				<div class="col">
+					<p class="lead">Image - $50</p>
+				</div>
+				
+			</div>			
 		</div>
 
 
@@ -140,15 +152,21 @@ div.hide-this {
 			</div>
 			<div class="row description-row">
 				<div class="col">
-					<p class="lead"><b>30</b> days</p>
+					<p class="lead"><b>28</b> days</p>
 				</div>
 			</div>
 			<div class="row description-row">
 				<div class="col">
-					<p class="lead">$140</p>
+					<p class="lead">Text - $140</p>
 				</div>
-				
+	
 			</div>
+			<div class="row description-row">
+				<div class="col">
+					<p class="lead">Image - $280</p>
+				</div>
+	
+			</div>			
 		</div>
 
 

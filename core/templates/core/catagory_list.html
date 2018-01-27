@@ -1,0 +1,48 @@
+{% extends 'index.html' %}
+{% load static %}
+
+
+{% block title %}
+All ({{all_cats|length}}) Catagories list | {{ block.super }}
+{% endblock %}
+
+{% block header0 %}
+<style type="text/css">
+div.catagory-box {
+	background: #FFF2F1;
+	margin: 10px; 
+	padding: 15px;
+}
+</style>
+{% endblock %}
+
+{% block content_1 %}
+<div class="row rounded" style="margin-top: 20px">
+	<div class="col">
+		<h3>All catagories</h3>
+		<h3><small><i>{{all_cats|length}} catagories</i></small></h3>
+	</div>
+</div>
+
+
+<div class="row rounded">
+	{% for cat in all_cats %}
+	<div class="col-lg-5 col-md-5 col-sm-5 rounded catagory-box">
+		<a href="{{ cat.get_absolute_url }}">
+			<h3>{{cat.catagory_name}}<br><small>{{cat.number_of_products}} products</small></h3>
+		</a>
+		<h3><small>{{cat.catagory_pitch}}</small></h3>
+	</div>
+	{% empty %}
+	<div class="col-lg-5 col-md-5 col-sm-5 rounded catagory-box">
+		<a href="{{ cat.get_absolute_url }}">
+			<h3>Oops!<br><small>Catagories not found</small></h3>
+		</a>
+		<h3><small>Please check back here in a few days.</small></h3>
+	</div>
+	{% endfor %}
+</div>
+
+
+<hr>
+{% endblock %}

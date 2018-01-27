@@ -20,8 +20,14 @@ from . import views
 app_name = 'core'
 urlpatterns = [
     path('', views.lander , name='lander'),
-	path('products/', views.index, name='home'),
-    path('ads/<int:id>/', views.advert_redirect, name='advert_redirect'),    
+    path('products/', views.index, name='home'),
+    
+    path('catagory/', include([
+        path('', views.catagory_list, name='catagory_list'),
+        path('<slug:slug>/', views.catagory_detail, name='catagory_detail'),
+        ])),
+ 
+	path('ads/<int:id>/', views.advert_redirect, name='advert_redirect'),    
 
     path('@<str:username>/', include([
         path('', views.user_profile, name='user_profile'),
