@@ -200,7 +200,15 @@
 							{% url 'login' %}
 							{% endif %}
 							" class="btn btn-dark btn-sm" style="float: right">Buy Ad space</a>
-							
+							<a href="#" data-toggle="tooltip" title="Some tooltip text!">Hover over me</a>
+
+							<!-- Generated markup by the plugin -->
+							<div class="tooltip bs-tooltip-top" role="tooltip">
+								<div class="arrow"></div>
+								<div class="tooltip-inner">
+									Some tooltip text!
+								</div>
+							</div>
 						</div>
 					</div>
 				</div>			
@@ -212,10 +220,18 @@
 		<div style="margin-top: 20px"></div>
 		{% include 'footer.html' %}
 
+		<script type="text/javascript">
+			$(function () {
+				$('[data-toggle="tooltip"]').tooltip()
+			})
+		</script>
+
 		<!-- Bootstrap core JavaScript -->
 		<script src="{% static 'base/vendor/jquery/jquery.min.js' %}"></script>
 		<script src="{% static 'base/vendor/bootstrap/js/bootstrap.bundle.js' %}"></script>
 		<script src="{% static 'base/vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+		<script type="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+
 	</body>
 
 	</html>

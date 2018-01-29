@@ -48,6 +48,10 @@ div.inspired-twin-products > p {
 div.inspired-twin-products > a.maker {
 	font-size: 20px;
 }
+
+p.shadow-text {
+	color: #99A1A6;
+}
 </style>
 
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.1/Chart.min.js"></script>
@@ -64,7 +68,7 @@ div.inspired-twin-products > a.maker {
 		<div class="col-lg-12 col-md-12 col-sm-12">
 			<h1>{{product.product_name}}</h1>		
 		</div>
-		<div class="col-lg-6 col-md-12 col-sm-12" style="float: left">
+		<div class="col-lg-12 col-md-12 col-sm-12" style="float: left">
 			<div class="row rounded product-detail">
 				<div class="col">
 					<p>{{product.product_pitch}}</p>
@@ -73,38 +77,43 @@ div.inspired-twin-products > a.maker {
 			<div class="row rounded product-detail">
 				<div class="col">
 					<b>Revenue: </b>
-				</div>
-				<div class="col">
 					<p>${{product.monthly_revenue|intcomma}} /month</p>
+
+				</div>
+				<div class="col-sm-12 col-lg-12 col-md-12">
+					{% for source in product.revenue_source.all %}
+					<a style="margin-right: 5px" href="" class="btn btn-outline-primary btn-sm" role="button">{{ source.source }}</a>
+					{% endfor %}
+				</div>
+				<div class="col-lg-12 col-md-12 col-sm-12">
+					<p class="shadow-text"><b>Note :</b> the revenue detail is {{product.revenue_info_source}}</p>
 				</div>
 			</div>
-		</div>
-		<div class="col-lg-6 col-md-12 col-sm-12 product-detail rounded" style="float: right">
-			<div class="row">
+			<div class="row rounded product-detail">
 				<div class=" product-link-list rounded" style="float: right;">
 					{% for link in links_ %}
 
 					{% if link.social_connection == product %}
 
 					{% if link.get_platform_display == 'ios' %}
-					<a href="{{link.link}}" target="_blank"><i class="fa fa-lg fa-apple" style="margin: 5px"></i></a>
+					<a href="{{link.link}}" target="_blank"><i class="fa fa-lg fa-apple" style="margin: 5px"></i> iOS App</a><br>
 					{% endif %}
 
 					{% if link.get_platform_display == 'android' %}
-					<a href="{{link.link}}" target="_blank"><i class="fa fa-lg fa-android" style="margin: 5px"></i></a>
+					<a href="{{link.link}}" target="_blank"><i class="fa fa-lg fa-android" style="margin: 5px"></i> Android App</a><br>
 					{% endif %}
 
 					{% if link.get_platform_display == 'website' %}
-					<a href="{{link.link}}" target="_blank"><i class="fa fa-lg fa-home" style="margin: 5px"></i></a>
+					<a href="{{link.link}}" target="_blank"><i class="fa fa-lg fa-home" style="margin: 5px"></i> Webpage</a><br>
 					{% endif %}
 
 					{% if link.get_platform_display == 'chrome' %}
-					<a href="{{link.link}}" target="_blank"><i class="fa fa-lg fa-chrome" style="margin: 5px"></i></a>
+					<a href="{{link.link}}" target="_blank"><i class="fa fa-lg fa-chrome" style="margin: 5px"></i> Chrome Extension</a><br>
 					{% endif %}
 
 					{% endif %}
 					{% endfor %}
-					<a href="{{product.website}}" target="_blank"><i class="fa fa-lg fa-home" style="margin: 5px"></i></a>
+					<a href="{{product.website}}" target="_blank"><i class="fa fa-lg fa-home" style="margin: 5px"></i> Website</a><br>
 				</div>
 			</div>
 		</div>
@@ -150,11 +159,11 @@ div.inspired-twin-products > a.maker {
 							],
 							datasets: [{
 								label: "Revenue (USD/Month)",
-								backgroundColor: ["#3e95cd",
+								backgroundColor: ["#4B4E6D",
 								
 								{% for product in this_catagory %}
 
-								"#8e5ea2",
+								"#99A1A6",
 
 								{% endfor %}
 

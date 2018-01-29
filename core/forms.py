@@ -1,28 +1,31 @@
 from django import forms
 from django.forms.formsets import BaseFormSet
 
-from .models import product, adverts, tags, links, email_list
+from .models import product, adverts, tags, links, email_list, revenue_source
 # from pagedown.widgets import PagedownWidget
 
 # form to create a new product
 class ProductForm(forms.ModelForm):
-    twin = forms.ModelMultipleChoiceField(queryset = product.objects.all(), widget=forms.CheckboxSelectMultiple())
-
+    # twin = forms.ModelMultipleChoiceField(queryset = product.objects.all(), widget=forms.CheckboxSelectMultiple())
+    revenue_source = forms.ModelMultipleChoiceField(queryset = revenue_source.objects.all(), widget=forms.CheckboxSelectMultiple())
     # tags = forms.ModelMultipleChoiceField(queryset = taggers.objects.all(), widget=forms.CheckboxSelectMultiple())
     class Meta:
         model = product
         fields = [
+        "catagory",
         "product_name",
         "product_pitch",
-        "catagory",
-        "monthly_revenue",
         "website",
-        "twin",
+        "monthly_revenue",
+        "revenue_source",
+        # "twin",
             ]
     
     def __init__(self, *args, **kwargs):
         super(ProductForm, self).__init__(*args, **kwargs)
-        self.fields["twin"].required = False 
+        # self.fields["revenue_source"].default = [0][0] 
+        self.fields["revenue_source"].help_text = "Please select atleast one" 
+        # self.fields["twin"].required = False 
 
 # form to create a new product
 class EmailForm(forms.ModelForm):

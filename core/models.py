@@ -30,17 +30,17 @@ class links(models.Model):
 		('Website', 'website'),
 		('Chrome Extension', 'chrome'),
 		)
-	user				=			models.ForeignKey(settings.AUTH_USER_MODEL, default=1, on_delete=models.CASCADE)
-	platform			=			models.CharField(max_length=30, choices=PLATFORM, default=PLATFORM[0][0])
-	link 				=			models.CharField(max_length=1000, blank=False, null=False)
-	social_connection	=			models.ForeignKey('product', related_name='social_links', on_delete=models.CASCADE)
+	user					=			models.ForeignKey(settings.AUTH_USER_MODEL, default=1, on_delete=models.CASCADE)
+	platform				=			models.CharField(max_length=30, choices=PLATFORM, default=PLATFORM[0][0])
+	link 					=			models.CharField(max_length=1000, blank=False, null=False)
+	social_connection		=			models.ForeignKey('product', related_name='social_links', on_delete=models.CASCADE)
 
 	def __str__(self):
 		return (str(self.platform) + str(" for ") + str(self.social_connection))
 
 	class Meta:
-		verbose_name 		= 		"Link"
-		verbose_name_plural = 		"Links"
+		verbose_name 		= 			"Link"
+		verbose_name_plural = 			"Links"
 
 '''
 	This is for adding Product's value interms of money
@@ -68,20 +68,20 @@ class links(models.Model):
 """
 
 class tags(models.Model):
-	tag 				=			models.CharField(max_length=30, blank=False, null=False)
-	slug 				=			models.SlugField(unique=True)
+	tag 					=			models.CharField(max_length=30, blank=False, null=False)
+	slug 					=			models.SlugField(unique=True)
 
-	timestamp			=			models.DateTimeField(auto_now=False, auto_now_add=True)
-	updated				=			models.DateTimeField(auto_now=True, auto_now_add=False)
+	timestamp				=			models.DateTimeField(auto_now=False, auto_now_add=True)
+	updated					=			models.DateTimeField(auto_now=True, auto_now_add=False)
 
 	# def get_absolute_url(self):
 	# 	return reverse("user:tag", kwargs={"slug" : self.slug})
 	def __str__(self):
 		return (str(self.tag))
 	class Meta:
-		ordering 			=		["-timestamp", "-updated"]
-		verbose_name 		= 		"Tag"
-		verbose_name_plural = 		"Tags"
+		ordering 			=			["-timestamp", "-updated"]
+		verbose_name 		=	 		"Tag"
+		verbose_name_plural =	 		"Tags"
 
 
 '''
@@ -96,19 +96,31 @@ class tags(models.Model):
 	This is the sole of this website
 '''
 class email_list(models.Model):
-	email 				=			models.EmailField(unique=True)
-	timestamp			=			models.DateTimeField(auto_now=False, auto_now_add=True)
-	updated				=			models.DateTimeField(auto_now=True, auto_now_add=False)
+	email 					=			models.EmailField(unique=True)
+	timestamp				=			models.DateTimeField(auto_now=False, auto_now_add=True)
+	updated					=			models.DateTimeField(auto_now=True, auto_now_add=False)
 
 	# def get_absolute_url(self):
 	# 	return reverse("user:tag", kwargs={"slug" : self.slug})
 	def __str__(self):
 		return (str(self.email))
 	class Meta:
-		ordering 			=		["-timestamp", "-updated"]
-		verbose_name 		= 		"Email List"
-		verbose_name_plural = 		"Email Lists"
+		ordering 			=			["-timestamp", "-updated"]
+		verbose_name 		= 			"Email List"
+		verbose_name_plural = 			"Email Lists"
 
+class revenue_source(models.Model):
+	REV_SOURCE = (
+		("------", "------"),
+		("Advertisments", "Ads"),
+		("Subscription", "subscription"),
+		("One time Payment", "entry fees"),
+		("Product sales", "sales"),
+		)
+	source 					=			models.CharField(max_length=50, choices=REV_SOURCE, default=REV_SOURCE[0][0])
+
+	def __str__(self):
+		return(str(self.source))
 
 class product_catagory(models.Model):
 	PRODUCT_CAT = (
@@ -118,17 +130,17 @@ class product_catagory(models.Model):
 		("Video Sharing", "video sharing"),
 		("audio books", "audio books"),
 		)
-	catagory_name		=			models.CharField(max_length=50, blank=False, null=False, default=suggest_product())
-	catagory_pitch		=			models.TextField(max_length=280, blank=True, null=True, default="Our revolutionary product will change the world", help_text="Catagory Detail")
-	slug				=			models.SlugField(unique=True)
+	catagory_name			=			models.CharField(max_length=50, blank=False, null=False, default=suggest_product())
+	catagory_pitch			=			models.TextField(max_length=280, blank=True, null=True, default="Our revolutionary product will change the world", help_text="Catagory Detail")
+	slug					=			models.SlugField(unique=True)
 	# This field is to parse common words from the connected product's pitch.
-	popular				=			models.TextField(max_length=1000, blank=True, null=True)
-	UserBase			=			models.IntegerField(blank=True, null=True, default='0')
-	total_revenue		= 			models.IntegerField(blank=True, null=True, default='0')
-	avg_revenue			= 			models.IntegerField(blank=True, null=True, default='0')
-	high_revenue		= 			models.IntegerField(blank=True, null=True, default='0')
-	timestamp			=			models.DateTimeField(auto_now=False, auto_now_add=True)
-	updated				=			models.DateTimeField(auto_now=True, auto_now_add=False)
+	popular					=			models.TextField(max_length=1000, blank=True, null=True)
+	UserBase				=			models.IntegerField(blank=True, null=True, default='0')
+	total_revenue			= 			models.IntegerField(blank=True, null=True, default='0')
+	avg_revenue				= 			models.IntegerField(blank=True, null=True, default='0')
+	high_revenue			= 			models.IntegerField(blank=True, null=True, default='0')
+	timestamp				=			models.DateTimeField(auto_now=False, auto_now_add=True)
+	updated					=			models.DateTimeField(auto_now=True, auto_now_add=False)
 
 	def __str__(self):
 		return(self.catagory_name)
@@ -137,29 +149,40 @@ class product_catagory(models.Model):
 		return reverse("user:catagory_detail", kwargs={'slug' : self.slug})
 
 	class Meta:
-		verbose_name 		= 		"Product Catagory"
-		verbose_name_plural = 		"Product Catagories"
+		verbose_name 		= 			"Product Catagory"
+		verbose_name_plural = 			"Product Catagories"
 
 
 
 class product(models.Model):
+	REV_INFO_SOURCE = (
+		("from the Internet, unverified.", "internet, unverified"),
+		("from the Internet, Admin Verified.", "internet, admin verified"),
+		("verified by the Maker.", "maker verified"),
+		("not for Public Viewing", "Not for public viewing"),
+		)
 	# who is uploading this product
-	user				=			models.ForeignKey(settings.AUTH_USER_MODEL, default=1, on_delete=models.CASCADE)
+	user					=			models.ForeignKey(settings.AUTH_USER_MODEL, default=1, on_delete=models.CASCADE)
 	# the product name
-	product_name		=			models.CharField(max_length=50, blank=False, null=False, default=suggest_product())
-	product_pitch		=			models.TextField(max_length=280, blank=True, null=True, default="Our revolutionary product will change the world", help_text="Product Pitch in less than 280 character")
-	slug				=			models.SlugField(unique=True)
-	monthly_revenue		=			models.IntegerField(blank=False, null=False, default=0, help_text="Product's Current Monthly Revenue in USD. Enter '0' if product is in development phase.")
+	product_name			=			models.CharField(max_length=50, blank=False, null=False, default=suggest_product())
+	product_pitch			=			models.TextField(max_length=280, blank=True, null=True, default="Our revolutionary product will change the world", help_text="Product Pitch in less than 280 character")
+	# If the product is uploaded by the maker, this needs to be done manually.
+	product_verified 		=			models.BooleanField(default=False)
+	slug					=			models.SlugField(unique=True)
+	monthly_revenue			=			models.IntegerField(blank=False, null=False, default=0, help_text="Product's Current Monthly Revenue in USD. Enter '0' if product is in development phase.")
+	# Added this on request of visitors
+	revenue_source			=			models.ManyToManyField('revenue_source', blank=False, help_text='How do you get the revenue? please choose atleast one')
+	revenue_info_source		=			models.CharField(max_length=50, choices=REV_INFO_SOURCE, default=REV_INFO_SOURCE[0][0])
 	# the website url
-	website				=			models.URLField(max_length=1000, blank=False, null=False, help_text="Your Landing page URL")
+	website					=			models.URLField(max_length=1000, blank=False, null=False, help_text="Your Landing page URL. When you choose to advert, your advert will divert to this URL.")
 	# other website which are twins to this
-	twin				=			models.ManyToManyField('product', blank=True, help_text="Websites which are very similar to your website.")
-	tag 				=			models.ManyToManyField('tags', blank=True, help_text="Features your website offers.")
+	twin					=			models.ManyToManyField('product', blank=True, help_text="Websites which are very similar to your website.")
+	tag 					=			models.ManyToManyField('tags', blank=True, help_text="Features your website offers.")
 
-	catagory 			=			models.ForeignKey(product_catagory, related_name='catagory', default=1, on_delete=models.CASCADE)
+	catagory 				=			models.ForeignKey(product_catagory, related_name='catagory', default=1, on_delete=models.CASCADE)
 
-	timestamp			=			models.DateTimeField(auto_now=False, auto_now_add=True)
-	updated				=			models.DateTimeField(auto_now=True, auto_now_add=False)
+	timestamp				=			models.DateTimeField(auto_now=False, auto_now_add=True)
+	updated					=			models.DateTimeField(auto_now=True, auto_now_add=False)
 
 	def __str__(self):
 		return(self.product_name + str(" By ") + self.user.username)
@@ -174,9 +197,9 @@ class product(models.Model):
 	# 	return reverse('user:card_delete', kwargs={"slug" : self.slug})
 
 	class Meta:
-		ordering	 		=		["-timestamp", "-updated"]
-		verbose_name 		= 		"Product"
-		verbose_name_plural = 		"Products"
+		ordering	 		=			["-timestamp", "-updated"]
+		verbose_name 		= 			"Product"
+		verbose_name_plural = 			"Products"
 
 
 """
@@ -241,10 +264,10 @@ class adverts(models.Model):
 		(28, "28 Days"),
 		)
 
-	user				=			models.ForeignKey(settings.AUTH_USER_MODEL, default=1, on_delete=models.CASCADE)
-	customer			=			models.ForeignKey('product',related_name='product_advert', on_delete=models.CASCADE)
-	ad_words			=			models.CharField(max_length=128, default=0, blank=True, null=True, help_text="Your advertisment text in 128 characters")
-	advert_text			=			models.CharField(max_length=20, default='learn more', blank=False, null=False,help_text="Button text to redirect to your link")
+	user					=			models.ForeignKey(settings.AUTH_USER_MODEL, default=1, on_delete=models.CASCADE)
+	customer				=			models.ForeignKey('product',related_name='product_advert', on_delete=models.CASCADE)
+	ad_words				=			models.CharField(max_length=128, default=0, blank=True, null=True, help_text="Your advertisment text in 128 characters")
+	advert_text				=			models.CharField(max_length=20, default='learn more', blank=False, null=False,help_text="Button text to redirect to your link")
 	image = models.ImageField(
 		help_text="Image size MUST be 350×250",
 		upload_to=upload_location,
@@ -256,24 +279,24 @@ class adverts(models.Model):
 	height_field = models.IntegerField(default=0)
 	width_field = models.IntegerField(default=0)
 
-	advert_status		=			models.CharField(max_length=10, choices=AD_STATUS, default=AD_STATUS[0][0])
+	advert_status			=			models.CharField(max_length=10, choices=AD_STATUS, default=AD_STATUS[0][0])
 
-	advert_view 		=			models.IntegerField(default=0)
-	current_clicks		=			models.IntegerField(default=0)
+	advert_view 			=			models.IntegerField(default=0)
+	current_clicks			=			models.IntegerField(default=0)
 
-	max_clicks			=			models.IntegerField(default=10, blank=True, null=True)
-	advert_lifespan		=			models.IntegerField(choices=AD_LIFE, default=AD_LIFE[0][0], help_text="Number of days you want the advert to be live")
-	advert_end			=			models.DateTimeField(editable=True)
-	# advert_duration 	=			models.DurationField()
-	timestamp			=			models.DateTimeField(auto_now=False, auto_now_add=True)
-	updated				=			models.DateTimeField(auto_now=True, auto_now_add=False)
+	max_clicks				=			models.IntegerField(default=10, blank=True, null=True)
+	advert_lifespan			=			models.IntegerField(choices=AD_LIFE, default=AD_LIFE[0][0], help_text="Number of days you want the advert to be live")
+	advert_end				=			models.DateTimeField(editable=True)
+	# advert_duration 		=			models.DurationField()
+	timestamp				=			models.DateTimeField(auto_now=False, auto_now_add=True)
+	updated					=			models.DateTimeField(auto_now=True, auto_now_add=False)
 	
 	def __str__(self):
 		return (str(self.customer) + str(" by ") + str(self.user.username))
 
 	class Meta:
-		verbose_name 		= 		"Advert"
-		verbose_name_plural = 		"Advertisments"
+		verbose_name 		= 			"Advert"
+		verbose_name_plural = 			"Advertisments"
 
 """
 	# This save function when enabled, doesnt allow other ANY OTHER FIELD to be edited, 

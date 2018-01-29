@@ -1,13 +1,13 @@
 from django.contrib import admin
 
 # Register your models here.
-from .models import product, links, tags, adverts, email_list, product_catagory
+from .models import product, links, tags, adverts, email_list, product_catagory, revenue_source
 
 class ProductAdmin(admin.ModelAdmin):
 	list_display = ['user', 'product_name']
 	list_filter = ['user', 'product_name']
 	search_fields = ['user', 'product_name']
-	filter_horizontal = ['tag', 'twin']
+	filter_horizontal = ['tag', 'twin', 'revenue_source',]
 
 class TagAdmin(admin.ModelAdmin):
 	list_display = ['tag']
@@ -34,7 +34,13 @@ class ProductCatAdmin(admin.ModelAdmin):
 	list_filter = ['catagory_name', 'catagory_pitch']
 	search_fields = ['catagory_name', 'catagory_pitch']
 
+class RevenueSourceAdmin(admin.ModelAdmin):
+	list_display = ['source',]
+	list_filter = ['source',]
+	search_fields = ['source',]
 
+
+admin.site.register(revenue_source, RevenueSourceAdmin)
 admin.site.register(adverts, AdvertAdmin)
 admin.site.register(tags, TagAdmin)
 admin.site.register(product, ProductAdmin)
