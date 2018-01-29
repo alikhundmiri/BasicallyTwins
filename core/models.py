@@ -115,7 +115,11 @@ class revenue_source(models.Model):
 		("Advertisments", "Ads"),
 		("Subscription", "subscription"),
 		("One time Payment", "entry fees"),
-		("Product sales", "sales"),
+		("eCommence", "eCommence"),
+		("Service sales", "service sales"),
+		("Digital Product sales", "digital product sales"),
+		("Digital Service sales", "digital service sales"),
+		("Affiliate Marketing", 'Affiliate Marketing'),
 		)
 	source 					=			models.CharField(max_length=50, choices=REV_SOURCE, default=REV_SOURCE[0][0])
 

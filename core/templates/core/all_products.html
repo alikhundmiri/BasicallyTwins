@@ -87,6 +87,12 @@ div.product-link-list{
 				<img  class="rounded" src="https://placeimg.com/140/140/tech/grayscale">
 			</div>
 			<div class="col">
+				{% if product.product_verified %}
+				<h1 class="pull-right" style="color: blue; font-size: 0.7em">
+					<i class="fa fa-certificate fa-lg" style="color: blue" aria-hidden="true"></i> VERIFIED
+				</h1>
+				{% endif %}
+
 				<div class="product-details">
 					<div class="row">
 						<div class="col" style="float: left;">
@@ -128,9 +134,9 @@ div.product-link-list{
 						</div>
 					</div>
 					<div class="row">
-						<div class="col-lg-12">
-							<p><b>Revenue: </b>${{product.monthly_revenue|intcomma}} /month</p>
-						</div>
+						<div class="col-lg-12 col-md-12 col-sm-12">
+							<p class="shadow-text"><b>Note :</b> the revenue details are {{product.revenue_info_source}}</p>
+						</div>						
 					</div>
 				</div>
 			</div>
@@ -140,12 +146,22 @@ div.product-link-list{
 						<div style="float: right;">
 							<div class="col-lg-12">
 								<div class="row">
-									<div class="col" style="float: right;">
+									<div class="col pull-right" style="float: right;">
 										{% if product.catagory %}
 										<a style="margin-right: 5px" href="{{ product.catagory.get_absolute_url }}" class="btn btn-light btn-sm" role="button">{{ product.catagory.catagory_name }}</a>
 										{% endif %}
 									</div>
+
+									<div class="col-lg-12">
+										<p><b>Revenue: </b>${{product.monthly_revenue|intcomma}} /month</p>
+									</div>
+									<div class="col-sm-12 col-lg-12 col-md-12">
+										{% for source in product.revenue_source.all %}
+										<a style="margin: 2px" href="" class="btn btn-outline-primary btn-sm" role="button">{{ source.source }}</a>
+										{% endfor %}
+									</div>
 								</div>
+								
 								<!-- <div class="row">
 									<div class="col">
 										<p>Basically a twin of:</p>

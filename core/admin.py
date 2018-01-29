@@ -4,9 +4,9 @@ from django.contrib import admin
 from .models import product, links, tags, adverts, email_list, product_catagory, revenue_source
 
 class ProductAdmin(admin.ModelAdmin):
-	list_display = ['user', 'product_name']
-	list_filter = ['user', 'product_name']
-	search_fields = ['user', 'product_name']
+	list_display = ['user', 'product_name', 'product_verified', 'catagory']
+	list_filter = ['user', 'product_name', 'product_verified' , 'catagory']
+	search_fields = ['user', 'product_name','product_verified' , 'catagory']
 	filter_horizontal = ['tag', 'twin', 'revenue_source',]
 
 class TagAdmin(admin.ModelAdmin):
