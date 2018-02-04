@@ -61,7 +61,7 @@ div.product-link-list{
 	<div class="col-lg-12">
 		<form method="get" action="">			
 			<div class="input-group">
-				<input type="text" name="q" class="form-control" placeholder="Search from {{products_|length}} Products in all Catagories"
+				<input type="text" name="q" class="form-control" placeholder="Search from {{products_|length}} Products in all Categories"
 				value="{{ request.GET.q }}">
 				<button class="btn btn-outline-default btn-sm" type="submit" value="Search">search</button>
 
@@ -77,7 +77,7 @@ div.product-link-list{
 <div class="row" style="margin-top: 20px">
 	<div class="col">
 		<h3 class="pull-right">
-			<a class="btn btn-sm btn-outline-primary" href="{% url 'user:catagory_list' %}"  style="margin: 20px; margin-top: 0px;">Catagories</a>
+			<a class="btn btn-sm btn-outline-primary" href="{% url 'user:catagory_list' %}"  style="margin: 20px; margin-top: 0px;">Categories</a>
 		</h3>
 		<h3>Products</h3>
 		{% if products_ %}

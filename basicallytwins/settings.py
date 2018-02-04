@@ -23,7 +23,15 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = os.environ.get('SECRET_KEY', '@m=d0_a5fx4#fasajn1lcl40mc#_dag#y$!g)=_gs1nau41(t(')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
+SEND_TWEETS  = os.environ.get("SEND_TWEETS", False)
+
+LOGIN_URL = 'login'
+LOGOUT_URL = 'logout'
+LOGIN_REDIRECT_URL = 'user'
+SOCIAL_AUTH_LOGIN_ERROR_URL = '/settings/'
+SOCIAL_AUTH_LOGIN_REDIRECT_URL = '/settings/'
+SOCIAL_AUTH_RAISE_EXCEPTIONS = False
 
 
 ALLOWED_HOSTS = [
@@ -33,6 +41,12 @@ ALLOWED_HOSTS = [
 'http://127.0.0.1:8000/',
 '127.0.0.1',
 ]
+
+# Twitter key and secret
+
+SOCIAL_AUTH_TWITTER_KEY = 'RQThsF9GDkxnuDoU6QDtObGAZ'
+SOCIAL_AUTH_TWITTER_SECRET = '9097T9RC0PCDNq3Uo36Si1BXbrteTAHAPj6ZK1zE4JqyRFNwMq'
+
 
 
 # Application definition
@@ -50,7 +64,8 @@ INSTALLED_APPS = [
     'django.contrib.humanize',
     # third party apps 
     'crispy_forms',
-    'widget_tweaks'
+    'widget_tweaks',
+    'social_django',
 
 ]
 
@@ -64,6 +79,8 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'social_django.middleware.SocialAuthExceptionMiddleware',  # <-- For Social login
+
 ]
 
 ROOT_URLCONF = 'basicallytwins.urls'
@@ -79,6 +96,10 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+
+                'social_django.context_processors.backends',  # <-- For Social Login
+                'social_django.context_processors.login_redirect', # <-- For social Login
+
             ],
         },
     },
@@ -86,6 +107,13 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'basicallytwins.wsgi.application'
 
+AUTHENTICATION_BACKENDS = (
+    'social_core.backends.github.GithubOAuth2',
+    'social_core.backends.twitter.TwitterOAuth',
+    'social_core.backends.facebook.FacebookOAuth2',
+
+    'django.contrib.auth.backends.ModelBackend',
+)
 
 # Database
 # https://docs.djangoproject.com/en/2.0/ref/settings/#databases

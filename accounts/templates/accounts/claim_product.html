@@ -1,0 +1,100 @@
+{% extends 'index.html' %}
+{% load static %}
+{% load secret_tag %}
+
+{% block title %}
+Page Text | {{ block.super }}
+{% endblock %}
+
+{% block header0 %}
+
+{% endblock %}
+
+{% block content_1 %}
+
+<h3>{{products_.product_name}}</h3>
+<hr>
+{% if contacts_ %}
+<p>posted on <b>{{ products_.timestamp }}</b></p>
+<p>Posted by <b>{{ products_.user }}</b></p>
+<p><i>Posted on behalf of its original creator</i></p>
+<br>
+<p>It remain in the original creator(s)'s interest to either claim this product as their own, or delete from this website.</p>
+<div class="row">
+	
+	<div class="col">
+		<p>This product is tagged with the following account(s)</p>
+		<ul>
+			{% for contact in contacts_ %}
+			<li>{{contact.contact_type}} : {{contact.contact|show_last_string:3}}</li>
+			{% endfor %}
+		</ul>
+	</div>
+	<div class="col">
+		<h5>How to claim?</h5>
+		<br>
+		<table class="table">
+			<tbody>
+				<tr>
+					<td>Make an account on Basically Twins</td>
+					<td>
+						{% if request.user.is_authenticated %}
+						<i class="fa fa-check"></i>
+						{% else %}
+						<a href="{% url 'register' %}">Register</a>
+						{% endif %}
+
+					</td>
+				</tr>
+				<tr>
+					<td>Sync with twitter</td>
+					<td>
+						{% if twitter_login %}
+						<i class="fa fa-check"></i>
+						{% else %}
+						<a href="{% url 'settings' %}">Check Here</a>
+						{% endif %}
+					</td>
+				</tr>
+				<tr>
+					<td>Try Claiming</td>
+					<td>
+						{% if claim %}
+						<a href="{% url 'user:check_claim' products_.slug request.user.username %}"> Check</a>
+						{% else %}
+						<p>You Cannot claim this product.</p>
+						{% if twitter_login %}
+						<p style="color: gray">You are Connected as <a href="https://twitter.com/{{ twitter_login.extra_data.access_token.screen_name }}/" target="_blank">@{{ twitter_login.extra_data.access_token.screen_name }}</a></p>
+						{% else %}
+						<p>You have not <a href="{% url 'login' %}">Logged in.</a></p>
+						{% endif %}
+						{% endif %}
+					</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+</div>
+
+{% if request.user.is_authenticated %}
+{% else %}
+<p><u><a href="{% url 'register' %}">Login to claim!</a></u></p>
+{% endif %}
+<br>
+<h3>Frequently Asked Questions</h3>
+<hr>
+<h4>what is Basically twins?</h4>
+<p>Basically twins is a collection of profitable website. The main goal of this site is to help other entrepreneur find other websites which are profitable and decide which what they should do for their next idea.</p>
+<h4>Why was this posted here?</h4>
+<p>I, personally liked the product, and I felt more people should know about it. </p>
+<h4>Who runs Basically Twins?</h4>
+<p><a href="https://www.twitter.com/newlifeshoes">I run it</a>. :-). You can follow me on twitter to know more about me. <br>To be short, I am a jobless web developer who is stubborn enough to not find a job and work on projects which may or may not pay my bills.</p>
+
+{% else %}
+
+<p>This product is already claimed!</p>
+<p>Please report to admin on <a href="https://www.twitter.com/newlifeshoes">twitter</a> if this is wrong</p>
+{% endif %}
+
+
+{% endblock %}

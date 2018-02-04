@@ -4,7 +4,7 @@
 
 
 {% block title %}
-Catagory : {{this_cat.catagory_name}} - {{products_|length}} Products | {{ block.super }}
+Category : {{this_cat.catagory_name}} - {{products_|length}} Products | {{ block.super }}
 {% endblock %}
 
 
@@ -95,7 +95,7 @@ div.catagory-details > p{
 		<h3 class="pull-right">
 			<a class="btn btn-sm btn-outline-primary" href="{% url 'user:home' %}" style="margin: 20px; margin-top: 0px;">All products</a>
 		</h3>		
-		<h3><a href="{% url 'user:catagory_list' %}"> Catagories </a>| {{this_cat.catagory_name}}</h3>
+		<h3><a href="{% url 'user:catagory_list' %}"> Categories </a>| {{this_cat.catagory_name}}</h3>
 	</div>
 </div>
 

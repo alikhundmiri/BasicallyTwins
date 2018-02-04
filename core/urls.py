@@ -32,7 +32,7 @@ urlpatterns = [
     path('@<str:username>/', include([
         path('', views.user_profile, name='user_profile'),
         path('create_product', views.create_product, name='create_product'),
-        path('edit_product', views.edit_product, name='edit_product'),
+        path('admin_create_product', views.admin_create_product, name='admin_create_product'),
         path('all_advert', views.all_advert, name='all_advert'),
         path('create_advert', views.create_advert, name='create_advert'),
         path('edit_advert', views.edit_advert, name='edit_advert'),
@@ -45,7 +45,12 @@ urlpatterns = [
 		path('<slug:slug>/', views.tag_detail, name='tag_detail'),
 		])),
 
-    path('<slug:slug>/', views.product_detail, name='product_detail'),
-
+    path('product/<slug:slug>/', views.product_detail, name='product_detail'),
+    path('product/<slug:slug>/<str:username>/edit', views.edit_product, name='edit_product'),
+    path('product/<slug:slug>/<str:username>/delete', views.delete_product, name='delete_product'),
+    path('claim_products/', views.claim_list, name='claim_list'),
+    path('claim_products/<slug:slug>/', views.claim_product, name='claim_product'),
+    path('claim_products/<slug:slug>/@<str:username>/', views.check_claim, name='check_claim'),
+    
 ]
 

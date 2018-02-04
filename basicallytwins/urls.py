@@ -18,7 +18,7 @@ from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import path, include
 
-from accounts.views import (login_view, logout_view, register_view)
+from accounts.views import (login_view, logout_view, register_view, user_settings, user_password)
 from core.views import index
 
 urlpatterns = [
@@ -26,6 +26,10 @@ urlpatterns = [
     path('login/', login_view, name='login'),
     path('logout/', logout_view, name='logout'),
     path('register/', register_view, name='register'),
+    path('settings/', user_settings, name='settings'),
+    path('settings/password/', user_password, name='password'),
+
+    path('oauth/', include('social_django.urls', namespace='social')),  # <--
     
     path('', include('core.urls', namespace='user')),
 

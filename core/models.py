@@ -5,7 +5,7 @@ from django.utils.text import slugify
 from django.db.models.signals import pre_save
 from django.core.validators import URLValidator
 
-
+import uuid
 import random
 from datetime import datetime, timedelta
 
@@ -22,6 +22,11 @@ def suggest_product():
 				'Thin Gap', 'Spinning Floor', 'Callar']
 
 	return(random.choice(names))
+
+def unique_link_element():
+	uid = uuid.uuid4()
+	unque = uid.hex
+	return unque
 
 class links(models.Model):
 	PLATFORM = (
@@ -82,7 +87,6 @@ class tags(models.Model):
 		ordering 			=			["-timestamp", "-updated"]
 		verbose_name 		=	 		"Tag"
 		verbose_name_plural =	 		"Tags"
-
 
 '''
 	Each product is a website which has completed the following 
@@ -156,7 +160,17 @@ class product_catagory(models.Model):
 		verbose_name 		= 			"Product Catagory"
 		verbose_name_plural = 			"Product Catagories"
 
-
+class anon_user_detail(models.Model):
+	CONTACTS_LIST = (
+		('Twitter', 'twitter'),
+		('e-mail', 'email'),
+		)
+	contact					=			models.CharField(max_length=200, blank=False, null=False)
+	contact_type			=			models.CharField(max_length=30, choices=CONTACTS_LIST, default=CONTACTS_LIST[0][0])
+	connected_product		=			models.ForeignKey('product', related_name='product_connected', on_delete=models.CASCADE, default=1)
+	
+	def __str__(self):
+		return(self.contact)
 
 class product(models.Model):
 	REV_INFO_SOURCE = (
@@ -180,6 +194,7 @@ class product(models.Model):
 	# the website url
 	website					=			models.URLField(max_length=1000, blank=False, null=False, help_text="Your Landing page URL. When you choose to advert, your advert will divert to this URL.")
 	# other website which are twins to this
+	claimable				=			models.BooleanField(default=False)
 	twin					=			models.ManyToManyField('product', blank=True, help_text="Websites which are very similar to your website.")
 	tag 					=			models.ManyToManyField('tags', blank=True, help_text="Features your website offers.")
 
@@ -194,6 +209,10 @@ class product(models.Model):
 	def get_absolute_url(self):
 		return reverse("user:product_detail", kwargs={"slug" : self.slug})
 
+	def get_claim_url(self):
+		return reverse("user:claim_product", kwargs={"slug" : self.slug})
+
+
 	# def get_edit_url(self):
 	# 	return reverse("user:card_edit", kwargs={"slug" : self.slug})
 
@@ -204,7 +223,6 @@ class product(models.Model):
 		ordering	 		=			["-timestamp", "-updated"]
 		verbose_name 		= 			"Product"
 		verbose_name_plural = 			"Products"
-
 
 """
 	class customQuestionSet(models.Model):
@@ -313,10 +331,8 @@ class adverts(models.Model):
 		if not self.id:
 			self.advert_end = datetime.now() + d
 			super(adverts, self).save()
-
 """
 	
-
 # SLUG FOR PRODUCT
 def slug_for_group(instance, new_slug=None):
 	slug = slugify(instance.product_name)
@@ -357,7 +373,6 @@ def pre_save_tag(sender, instance, *args, **kwargs):
 	if not instance.slug:
 		instance.slug = slug_for_tag(instance)
 
-
 # SLUG FOR CATAGORY
 def slug_for_catagory(instance, new_slug=None):
 	slug = slugify(instance.catagory_name)
@@ -378,7 +393,30 @@ def pre_save_catagory(sender, instance, *args, **kwargs):
 	if not instance.slug:
 		instance.slug = slug_for_catagory(instance)
 
+"""
+# UUID for anno_user
+def slug_for_catagory(instance, new_slug=None):
+	slug = slugify(instance.catagory_name)
+	if new_slug is not None:
+		slug = new_slug
+	qs = anon_user_detail.objects.filter(slug=slug).order_by("-id")
+	exists = qs.exists()
+	if exists:
+		# print("slug: " + str(slug))
+		a = slug.split('-')
+		# print("a: " + str(a[0]))
+		new_slug = "%s-%s" %(a[0], qs.first().id)
+		# print("new_slug: " + str(new_slug))
+		# new_slug = "%s-%s" %(slug, qs.first().id)
+		return slug_for_catagory(instance, new_slug=new_slug)
+	return slug
+def pre_save_anno(sender, instance, *args, **kwargs):
+	if not instance.slug:
+		instance.slug = slug_for_catagory(instance)
 
+pre_save.connect(pre_save_anno, sender=anon_user_detail)
+
+"""
 pre_save.connect(pre_save_group, sender=product)
 pre_save.connect(pre_save_tag, sender=tags)
 pre_save.connect(pre_save_catagory, sender=product_catagory)

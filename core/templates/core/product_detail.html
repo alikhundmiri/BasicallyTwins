@@ -49,6 +49,10 @@ div.inspired-twin-products > a.maker {
 	font-size: 20px;
 }
 
+a.user-product{
+	margin-left: 5px;
+	margin-right: 5px;
+}
 </style>
 
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.1/Chart.min.js"></script>
@@ -67,6 +71,12 @@ div.inspired-twin-products > a.maker {
 			<h1 class="pull-right" style="color: blue; font-size: 0.7em">
 				<i class="fa fa-certificate fa-lg" style="color: blue" aria-hidden="true"></i> VERIFIED
 			</h1>
+			{% endif %}
+			{% if request.user == product.user %}
+			<h4 class="pull-right">
+<!-- 				<a href="{% url 'user:delete_product' product.slug request.user.username %}" class="btn btn-danger btn-sm pull-right user-product" role="button">delete</a> -->
+				<a href="{% url 'user:edit_product' product.slug request.user.username %}" class="btn btn-outline-danger btn-sm pull-right user-product" role="button">Edit</a>
+			</h4>
 			{% endif %}
 			<h1>
 				{{product.product_name}} 

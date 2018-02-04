@@ -1,0 +1,21 @@
+{% extends 'index.html' %}
+{% load static %}
+
+
+{% block title %}
+Page Text | {{ block.super }}
+{% endblock %}
+
+{% block header0 %}
+
+{% endblock %}
+
+{% block content_1 %}
+<h3>Claimable Products:</h3>
+{% for product in products_ %}
+<p>{{product.product_name}}- <a href="{{ product.get_claim_url }}">Claim</a></p>
+
+{% empty %}
+<p>No claimable product.</p>
+{% endfor %}
+{% endblock %}

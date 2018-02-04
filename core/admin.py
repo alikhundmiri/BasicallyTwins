@@ -1,12 +1,12 @@
 from django.contrib import admin
 
 # Register your models here.
-from .models import product, links, tags, adverts, email_list, product_catagory, revenue_source
+from .models import product, links, tags, adverts, email_list, product_catagory, revenue_source, anon_user_detail
 
 class ProductAdmin(admin.ModelAdmin):
 	list_display = ['user', 'product_name', 'product_verified', 'catagory']
-	list_filter = ['user', 'product_name', 'product_verified' , 'catagory']
-	search_fields = ['user', 'product_name','product_verified' , 'catagory']
+	list_filter = ['user', 'product_name', 'product_verified' , 'catagory', 'claimable']
+	search_fields = ['user', 'product_name','product_verified' , 'catagory', 'claimable']
 	filter_horizontal = ['tag', 'twin', 'revenue_source',]
 
 class TagAdmin(admin.ModelAdmin):
@@ -39,7 +39,13 @@ class RevenueSourceAdmin(admin.ModelAdmin):
 	list_filter = ['source',]
 	search_fields = ['source',]
 
+class AnonUserAdmin(admin.ModelAdmin):
+	list_display = ['contact','contact_type', 'connected_product']
+	list_filter = ['contact','contact_type', 'connected_product']
+	search_fields = ['contact','contact_type', 'connected_product']
 
+
+admin.site.register(anon_user_detail, AnonUserAdmin)
 admin.site.register(revenue_source, RevenueSourceAdmin)
 admin.site.register(adverts, AdvertAdmin)
 admin.site.register(tags, TagAdmin)

@@ -19,31 +19,54 @@ User Profile | {{ block.super }}
 	background: #FFF2FF;
 }
 
+a.top-deck{
+	margin: 5px
+}
+
+a.right-deck{
+	margin: 5px;
+	font-size: 15px;
+}
+
+div.top-deck-col{
+	padding-left: 0px !important;
+	padding-right: 0px !important;
+	margin-bottom: 20px;
+}
+
+a.user-product{
+	margin-left: 5px;
+	margin-right: 5px;
+}
 </style>
 {% endblock %}
 
 
 {% block content_1 %}
 <div class="row">
-	<div class="col">
-
+	<div class="col top-deck-col">
 		<a class="pull-left">
 			<h3>
-				{{request.user.username}}
+				{{username}}
 			</h3>
 		</a>
-		<a style="margin: 5px" href="{% url 'user:create_product' request.user.username %}" class="btn btn-outline-dark btn-lg pull-right" role="button">Add new Product</a>
-		<a style="margin: 5px" href="{% url 'user:create_advert' request.user.username %}" class="btn btn-outline-primary btn-lg pull-right" role="button">Create new advert</a>
+		<a href="{% url 'user:create_product' request.user.username %}" class="btn btn-outline-dark btn-lg pull-right top-deck" role="button">Add new Product</a>
+		<a href="{% url 'user:create_advert' request.user.username %}" class="btn btn-outline-primary btn-lg pull-right top-deck" role="button">Create new advert</a>
 
 	</div>
 </div>
 <div class="row">
 	<div class="col">
-		<h3></h3>
 		<!-- <p class="lead">@twitter</p> -->
 		{% for product in products %}
 		<div class="row">
 			<div class="col rounded product-line" style="">
+				{% if request.user == product.user %}
+				<h4 class="pull-right">
+					<a href="{% url 'user:delete_product' product.slug request.user.username %}" class="btn btn-danger btn-sm pull-right user-product" role="button">delete</a>
+					<a href="{% url 'user:edit_product' product.slug request.user.username %}" class="btn btn-outline-danger btn-sm pull-right user-product" role="button">Edit</a>
+				</h4>
+				{% endif %}
 				<h4><a href="{{product.get_absolute_url}}">{{product.product_name}}</a>
 					<br>
 					<small>
@@ -61,4 +84,15 @@ User Profile | {{ block.super }}
 </div>
 
 
+{% endblock %}
+
+{% block content_3 %}
+<div class="row">
+	<div class="col">
+
+		<a href="{% url 'user:claim_list' %}" class="pull-right right-deck" role="button">Claim a product?</a>
+		<br>
+	</div>
+</div>
+{{ block.super }}
 {% endblock %}
