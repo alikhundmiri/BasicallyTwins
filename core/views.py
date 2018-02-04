@@ -196,24 +196,24 @@ def admin_create_product(request, username=None):
 			# new_product.revenue_source.add(new_revenue_source)
 			
 			# now save the data for each form in formset
-			# print('Saved all the details of product')
+			print('Saved all the details of product')
 			new_details = []
-			# print('itterating through all details...')
+			print('itterating through all details...')
 			for detail_form in detail_formset:
-				# print('now at...' + str(detail_form))
+				print('now at...' + str(detail_form))
 				if detail_form.is_valid():
 					contact = detail_form.cleaned_data.get('contact')
 					contact_type = detail_form.cleaned_data.get('contact_type')
 					if contact_type and contact:
-						# print("contact_type and contact are True")
+						print("contact_type and contact are True")
 						model_instance = anon_user_detail(connected_product=new_product)
 						setattr(model_instance, 'contact', contact)
 						setattr(model_instance, 'contact_type', contact_type)
-						# print(model_instance)
+						print(model_instance)
 						new_details.append(model_instance)
-						# print(new_details)
+						print(new_details)
 			try:
-				# print('Trying...')
+				print('Trying...')
 
 				with transaction.atomic():
 					# Replace the old with the new
@@ -227,7 +227,7 @@ def admin_create_product(request, username=None):
 					
 					manager_start.initial_sort(new_product.product_name, new_product.slug, new_details)
 					
-					# print('Done!')
+					print('Done!')
 			except IntegrityError: # if the transaction failed
 				print('There was an error submitting your entry')
 				messages.error(request, 'There was an error submitting your entry')
