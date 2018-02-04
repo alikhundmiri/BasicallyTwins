@@ -74,7 +74,7 @@ class links(models.Model):
 
 class tags(models.Model):
 	tag 					=			models.CharField(max_length=30, blank=False, null=False)
-	slug 					=			models.SlugField(unique=True)
+	slug 					=			models.SlugField(max_length=255, unique=True)
 
 	timestamp				=			models.DateTimeField(auto_now=False, auto_now_add=True)
 	updated					=			models.DateTimeField(auto_now=True, auto_now_add=False)
@@ -186,7 +186,7 @@ class product(models.Model):
 	product_pitch			=			models.TextField(max_length=280, blank=True, null=True, default="Our revolutionary product will change the world", help_text="Product Pitch in less than 280 character")
 	# If the product is uploaded by the maker, this needs to be done manually.
 	product_verified 		=			models.BooleanField(default=False)
-	slug					=			models.SlugField(unique=True)
+	slug					=			models.SlugField(max_length=255, unique=True)
 	monthly_revenue			=			models.IntegerField(blank=False, null=False, default=0, help_text="Product's Current Monthly Revenue in USD. Enter '0' if product is in development phase.")
 	# Added this on request of visitors
 	revenue_source			=			models.ManyToManyField('revenue_source', blank=False, help_text='How do you get the revenue? please choose atleast one')
@@ -393,30 +393,7 @@ def pre_save_catagory(sender, instance, *args, **kwargs):
 	if not instance.slug:
 		instance.slug = slug_for_catagory(instance)
 
-"""
-# UUID for anno_user
-def slug_for_catagory(instance, new_slug=None):
-	slug = slugify(instance.catagory_name)
-	if new_slug is not None:
-		slug = new_slug
-	qs = anon_user_detail.objects.filter(slug=slug).order_by("-id")
-	exists = qs.exists()
-	if exists:
-		# print("slug: " + str(slug))
-		a = slug.split('-')
-		# print("a: " + str(a[0]))
-		new_slug = "%s-%s" %(a[0], qs.first().id)
-		# print("new_slug: " + str(new_slug))
-		# new_slug = "%s-%s" %(slug, qs.first().id)
-		return slug_for_catagory(instance, new_slug=new_slug)
-	return slug
-def pre_save_anno(sender, instance, *args, **kwargs):
-	if not instance.slug:
-		instance.slug = slug_for_catagory(instance)
 
-pre_save.connect(pre_save_anno, sender=anon_user_detail)
-
-"""
 pre_save.connect(pre_save_group, sender=product)
 pre_save.connect(pre_save_tag, sender=tags)
 pre_save.connect(pre_save_catagory, sender=product_catagory)
