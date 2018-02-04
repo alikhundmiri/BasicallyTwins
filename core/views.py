@@ -194,6 +194,8 @@ def admin_create_product(request, username=None):
 			# new_product_revenue_source			=		product_form.cleaned_data.get('revenue_source')
 			# new_revenue_source					=		revenue_source.objects.get_or_create(source = new_product_revenue_source)
 			# new_product.revenue_source.add(new_revenue_source)
+			print("Updating the revenue Details")
+			catagory_utils.set_revenue_details(new_product.catagory.slug)
 			
 			# now save the data for each form in formset
 			print('Saved all the details of product')
@@ -218,13 +220,12 @@ def admin_create_product(request, username=None):
 				with transaction.atomic():
 					# Replace the old with the new
 					# anon_user_detail.objects.filter(title=title).delete()
-					
+					print("Creating Bulk objects")
 					anon_user_detail.objects.bulk_create(new_details)
-					
+					print("Created Bulk objects")
 					# and notify our users that it worked
 					messages.success(request, "Successfully submitted new entry")
-					catagory_utils.set_revenue_details(new_product.catagory.slug)
-					
+					print("Starting the tweeting...")
 					manager_start.initial_sort(new_product.product_name, new_product.slug, new_details)
 					
 					print('Done!')
