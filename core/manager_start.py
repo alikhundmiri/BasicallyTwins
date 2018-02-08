@@ -28,7 +28,7 @@ def initial_sort(product_name, slug, new_details):
 
 
 def generate_url(slug, new_details):
-	baselink = "127.0.0.1:8000/claim_products/"
+	baselink = "basically-twins.herokuapp.com/claim_products/"
 	complete_link = baselink + slug
 	return complete_link
 
