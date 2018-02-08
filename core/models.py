@@ -140,7 +140,7 @@ class product_catagory(models.Model):
 		)
 	catagory_name			=			models.CharField(max_length=50, blank=False, null=False, default=suggest_product())
 	catagory_pitch			=			models.TextField(max_length=280, blank=True, null=True, default="Our revolutionary product will change the world", help_text="Catagory Detail")
-	slug					=			models.SlugField(unique=True)
+	slug					=			models.SlugField(max_length=60, unique=True)
 	# This field is to parse common words from the connected product's pitch.
 	popular					=			models.TextField(max_length=1000, blank=True, null=True)
 	UserBase				=			models.IntegerField(blank=True, null=True, default='0')
