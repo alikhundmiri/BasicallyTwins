@@ -47,31 +47,6 @@ class links(models.Model):
 		verbose_name 		= 			"Link"
 		verbose_name_plural = 			"Links"
 
-'''
-	This is for adding Product's value interms of money
-	how did they get the money? was it VC? Angel? self financed? or all?
-
-	this will be used to calculate product market value.
-'''
-"""
-	class finances(models.Model):
-		PLATFORM = (
-			('Android', 'VC'),
-			('iOS', 'Angel'),
-			('Website', 'aquired'),
-			)
-		user				=			models.ForeignKey(settings.AUTH_USER_MODEL, default=1, on_delete=models.CASCADE)
-		platform			=			models.CharField(max_length=30, choices=PLATFORM, default=PLATFORM[0][0])
-		link 				=			models.CharField(max_length=1000, blank=False, null=False)
-		social_connection	=			models.ForeignKey('product', related_name='social_links', on_delete=models.CASCADE)
-
-		timestamp			=			models.DateTimeField(auto_now=False, auto_now_add=True)
-		updated				=			models.DateTimeField(auto_now=True, auto_now_add=False)
-
-		def __str__(self):
-			return (str(self.platform) + str(" for ") + str(self.social_connection))
-"""
-
 class tags(models.Model):
 	tag 					=			models.CharField(max_length=30, blank=False, null=False)
 	slug 					=			models.SlugField(max_length=255, unique=True)
@@ -100,7 +75,7 @@ class tags(models.Model):
 	This is the sole of this website
 '''
 class email_list(models.Model):
-	email 					=			models.EmailField(unique=True)
+	email 					=			models.EmailField(max_length=100 ,unique=True)
 	timestamp				=			models.DateTimeField(auto_now=False, auto_now_add=True)
 	updated					=			models.DateTimeField(auto_now=True, auto_now_add=False)
 
@@ -212,65 +187,11 @@ class product(models.Model):
 	def get_claim_url(self):
 		return reverse("user:claim_product", kwargs={"slug" : self.slug})
 
-
-	# def get_edit_url(self):
-	# 	return reverse("user:card_edit", kwargs={"slug" : self.slug})
-
-	# def get_delete_url(self):
-	# 	return reverse('user:card_delete', kwargs={"slug" : self.slug})
-
 	class Meta:
 		ordering	 		=			["-timestamp", "-updated"]
 		verbose_name 		= 			"Product"
 		verbose_name_plural = 			"Products"
 
-"""
-	class customQuestionSet(models.Model):
-		user				=			models.ForeignKey(settings.AUTH_USER_MODEL, default=1, on_delete=models.CASCADE)
-		title 				=			models.TextField(max_length=1000, blank=False, null=False)
-		answer				=			models.CharField(max_length=10000, blank=False, null=False)
-		customquestions		=			models.ForeignKey('interview',related_name='Custom_Question', on_delete=models.CASCADE)
-
-		timestamp			=			models.DateTimeField(auto_now=False, auto_now_add=True)
-		updated				=			models.DateTimeField(auto_now=True, auto_now_add=False)
-
-		# image
-		def __str__(self):
-			return(self.title)
-
-	class DefaultQuestionSet(models.Model):
-		QUESTION_SET = (
-			("question_1", 'q_1'),
-			("question_2", 'q_2'),
-			("question_3", 'q_3'),
-			("question_4", 'q_4'),
-			("question_5", 'q_5'),
-			("question_6", 'q_6'),
-			("question_7", 'q_7'),
-			)
-		user				=			models.ForeignKey(settings.AUTH_USER_MODEL, default=1, on_delete=models.CASCADE)
-		title 				=			models.CharField(max_length=1000, choices=QUESTION_SET, default=QUESTION_SET[0][0])
-		answer				=			models.CharField(max_length=10000, blank=False, null=False)
-		defaultquestions	=			models.ForeignKey('interview', related_name='Default_Question', on_delete=models.CASCADE)
-
-		timestamp			=			models.DateTimeField(auto_now=False, auto_now_add=True)
-		updated				=			models.DateTimeField(auto_now=True, auto_now_add=False)
-
-		# image
-		def __str__(self):
-			return(self.title)
-
-	class interview(models.Model):
-		user				=			models.ForeignKey(settings.AUTH_USER_MODEL, default=1, on_delete=models.CASCADE)
-		# who is giving this interview
-		product				=			models.ForeignKey('product', on_delete=models.CASCADE)
-
-		timestamp			=			models.DateTimeField(auto_now=False, auto_now_add=True)
-		updated				=			models.DateTimeField(auto_now=True, auto_now_add=False)
-
-		def __str__(self):
-			return(self.product + "- By " + self.user.username)
-"""
 
 class adverts(models.Model):
 	app_name = "adverts"
@@ -301,7 +222,7 @@ class adverts(models.Model):
 	height_field = models.IntegerField(default=0)
 	width_field = models.IntegerField(default=0)
 
-	advert_status			=			models.CharField(max_length=10, choices=AD_STATUS, default=AD_STATUS[0][0])
+	advert_status			=			models.CharField(max_length=20, choices=AD_STATUS, default=AD_STATUS[0][0])
 
 	advert_view 			=			models.IntegerField(default=0)
 	current_clicks			=			models.IntegerField(default=0)
