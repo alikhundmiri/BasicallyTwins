@@ -159,6 +159,9 @@ class product(models.Model):
 	# the product name
 	product_name			=			models.CharField(max_length=50, blank=False, null=False, default=suggest_product())
 	product_pitch			=			models.TextField(max_length=280, blank=True, null=True, default="Our revolutionary product will change the world", help_text="Product Pitch in less than 280 character")
+
+	# To Avoid spam content
+	no_spam					=			models.BooleanField(default=False)
 	# If the product is uploaded by the maker, this needs to be done manually.
 	product_verified 		=			models.BooleanField(default=False)
 	slug					=			models.SlugField(max_length=255, unique=True)

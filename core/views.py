@@ -186,6 +186,7 @@ def admin_create_product(request, username=None):
 			new_product.website 				=		product_form.cleaned_data.get('website')
 			new_product.monthly_revenue 		=		product_form.cleaned_data.get('monthly_revenue')
 			new_product.claimable				=		True
+			new_product.no_spam					=		True
 			new_product.user 					=		user
 			# Saving this above data
 			new_product.save()
@@ -385,7 +386,7 @@ def user_profile(request, username=None):
 
 def index(request):
 	ads = advert_utils.fetch_adverts()
-	products_ = product.objects.all()
+	products_ = product.objects.filter(no_spam=True)
 	tags_ = tags.objects.all()
 	links_ = links.objects.all()
 
