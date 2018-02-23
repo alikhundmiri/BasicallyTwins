@@ -15,5 +15,11 @@ def validate_domainonly_email(value):
 
 # My custom validator
 def validate_product_name(value):
+	"""
+	take the 'value' and see if it contain 
+		atleast 3 letters
+		no spacial characters except '-'
+
+	"""
 	pass
-	
+
