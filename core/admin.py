@@ -4,8 +4,9 @@ from django.contrib import admin
 from .models import product, links, tags, adverts, email_list, product_catagory, revenue_source, anon_user_detail
 
 class ProductAdmin(admin.ModelAdmin):
-	list_display = ['user', 'product_name', 'product_verified', 'catagory']
-	list_filter = ['user', 'product_name', 'product_verified' , 'catagory', 'claimable']
+	list_display = ['user', 'product_name', 'product_verified', 'catagory', 'no_spam']
+	list_filter = ['user', 'product_name', 'product_verified' , 'catagory', 'claimable', 'no_spam']
+	list_editable = ['no_spam',]
 	search_fields = ['user', 'product_name','product_verified' , 'catagory', 'claimable']
 	filter_horizontal = ['tag', 'twin', 'revenue_source',]
 
