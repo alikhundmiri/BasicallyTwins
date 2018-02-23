@@ -23,8 +23,8 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = os.environ.get('SECRET_KEY', '@m=d0_a5fx4#fasajn1lcl40mc#_dag#y$!g)=_gs1nau41(t(')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-# DEBUG = True
-DEBUG = os.environ.get('DEBUG', False)
+DEBUG = False
+# DEBUG = os.environ.get('DEBUG', False)
 
 SEND_TWEETS  = os.environ.get("SEND_TWEETS", True)
 

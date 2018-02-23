@@ -426,10 +426,11 @@ def index(request):
 def catagory_list(request):
 	all_cats = product_catagory.objects.annotate(number_of_products=Count('catagory', distinct=True))
 	"""
-	I have no idea why I am counting catagory,								^^^^^^^
-	I should be counting "product" to find out the number of products each catagory is connected. 
+	I have no idea why I am counting category,								^^^^^^^
+	I should be counting "product" to find out the number of products each category is connected. 
 	DONT CHANGE
 	"""
+
 	ads = advert_utils.fetch_adverts()
 	context = {
 		"all_cats" : all_cats,
