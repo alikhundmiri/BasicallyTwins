@@ -1,7 +1,7 @@
 from django import forms
 from django.forms.formsets import BaseFormSet
 
-from .models import product, adverts, tags, links, email_list, revenue_source, anon_user_detail
+from .models import product, adverts, tags, links, email_list, revenue_source, anon_user_detail, list_items
 # from pagedown.widgets import PagedownWidget
 
 
@@ -12,6 +12,18 @@ class EmailForm(forms.ModelForm):
         fields = [
         "email",
         ]
+
+# Form to create a new entry for List
+class ListOneForm(forms.ModelForm):
+    class Meta:
+        model = list_items
+        fields = [
+        "name",
+        "detail",
+        "link",
+        "revenue_source",
+        "suitable_for",
+        ]        
 # form to create advert
 class AdvertForm(forms.ModelForm):
 

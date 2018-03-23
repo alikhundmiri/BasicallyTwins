@@ -12,8 +12,8 @@ from django.urls import reverse
 from django.utils import timezone
 from datetime import datetime, timedelta
 
-from .models import product, tags, links, adverts, product_catagory, anon_user_detail, revenue_source
-from .forms import ProductForm, EmailForm, AdvertForm, NewDetailForm, BaseDetailFormSet
+from .models import product, tags, links, adverts, product_catagory, anon_user_detail, revenue_source, list_items
+from .forms import ProductForm, EmailForm, AdvertForm, NewDetailForm, BaseDetailFormSet, ListOneForm
 from . import catagory_utils, advert_utils, manager_start
 
 from social_django.models import UserSocialAuth
@@ -21,6 +21,44 @@ from social_django.models import UserSocialAuth
 import random
 import json
 
+
+def list_one(request):
+	all_item_in_list = list_items.objects.filter(public_view=True)
+	"""
+	I have no idea why I am counting category,								^^^^^^^
+	I should be counting "product" to find out the number of products each category is connected. 
+	DONT CHANGE
+	"""
+
+	ads = advert_utils.fetch_adverts()
+	context = {
+		"all_item_in_list" : all_item_in_list,
+		"ads" : ads,
+		"show_ads" : True,
+	}
+	return render(request, 'core/list_one.html', context)	
+
+@user_passes_test(lambda u: u.is_superuser)
+def list_one_new(request):
+	if not request.user.is_authenticated:
+		raise Http404
+
+	form = ListOneForm(request.POST or None)
+	if form.is_valid():
+		instance = form.save(commit=False)
+		instance.user = request.user
+		instance.save()
+		# form.save_m2m()
+		return HttpResponseRedirect(reverse('list_one'))
+
+	context = {
+		'form' : form,
+		"tab_text": "Submit Product",
+		"top_text": "Enter the details for Websites which make users Revenue.",
+		"form_text": "Please enter all the information below.",
+
+	}
+	return render(request, 'general_form.html', context)
 
 """
 purpose : To display all the products which are flagged as claimable.
@@ -479,7 +517,6 @@ def catagory_detail(request, slug=None):
 		"show_ads" : True,
 	}
 	return render(request, 'core/catagory_detail.html', context)
-
 
 
 """

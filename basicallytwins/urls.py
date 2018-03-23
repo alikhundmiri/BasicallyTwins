@@ -19,13 +19,16 @@ from django.contrib import admin
 from django.urls import path, include
 
 from accounts.views import (login_view, logout_view, register_view, user_settings, user_password)
-from core.views import index
+from core.views import (index, list_one, list_one_new)
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('login/', login_view, name='login'),
     path('logout/', logout_view, name='logout'),
     path('register/', register_view, name='register'),
+    path('list/realmoney/', list_one, name='list_one'),
+    path('list/realmoney/new', list_one_new, name='list_one_new'),
+
     path('settings/', user_settings, name='settings'),
     path('settings/password/', user_password, name='password'),
 

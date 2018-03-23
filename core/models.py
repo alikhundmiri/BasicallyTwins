@@ -105,6 +105,89 @@ class revenue_source(models.Model):
 	def __str__(self):
 		return(str(self.source))
 
+class anon_user_detail(models.Model):
+	CONTACTS_LIST = (
+		('Twitter', 'twitter'),
+		('e-mail', 'email'),
+		)
+	contact					=			models.CharField(max_length=200, blank=False, null=False)
+	contact_type			=			models.CharField(max_length=30, choices=CONTACTS_LIST, default=CONTACTS_LIST[0][0])
+	connected_product		=			models.ForeignKey('product', related_name='product_connected', on_delete=models.CASCADE, default=1)
+	
+	def __str__(self):
+		return(self.contact)
+
+'''
+class list_all(models.Model):
+	user 					=			models.ForeignKey(settings.AUTH_USER_MODEL, default=1, on_delete=models.CASCADE)
+	list_name 				=			models.CharField(max_length=50, blank=False, null=False)
+	slug					=			models.SlugField(max_length=255, unique=True)
+	list_detail				=			models.TextField(max_length=280, blank=True, null=True, default="List details", help_text="List Pitch in less than 280 character")
+
+	timestamp				=			models.DateTimeField(auto_now=False, auto_now_add=True)
+	updated					=			models.DateTimeField(auto_now=True, auto_now_add=False)
+
+	def __str__(self):
+		return(self.catagory_name)
+
+	def get_absolute_url(self):
+		return reverse("user:catagory_detail", kwargs={'slug' : self.slug})
+
+	class Meta:
+		verbose_name 		= 			"Product Catagory"
+		verbose_name_plural = 			"Product Catagories"
+
+'''
+
+
+
+class list_items(models.Model):
+	REV_SOURCES = (
+		('Advert', 'ad'),
+		('Royalty', 'royalty'),
+		('Marketplace', 'marketplace'),
+		)
+
+	WORK_FOR = (
+		('Painter', 'Painter'),
+		('Writers', 'Writers'),
+		('Educator', 'Educator'),
+		('Programmer', 'Programmer'),
+		('Music Creator', 'Music Creator'),
+		('Video Creator', 'Video Creator'),
+		('Internet Entrepreneur', 'internet Entrepreneur'),
+		)
+
+	user 					=			models.ForeignKey(settings.AUTH_USER_MODEL, default=1, on_delete=models.CASCADE)
+	name 					=			models.CharField(max_length=50, blank=False, null=False)
+	slug					=			models.SlugField(max_length=255, unique=True)
+	detail					=			models.TextField(max_length=280, blank=True, null=True, default="Product details", help_text="Product Pitch in less than 280 character")
+	link 					=			models.URLField(max_length=1000, blank=False, null=False, help_text="URL")
+	revenue_source			=			models.CharField(max_length=100, choices=REV_SOURCES, default=REV_SOURCES[0][0])
+	suitable_for			=			models.CharField(max_length=100, choices=WORK_FOR, default=WORK_FOR[0][0])
+	public_view				=			models.BooleanField(default=True)
+	# sources
+	# list_name 				=			models.ForeignKey(product_catagory, related_name='catagory', default=1, on_delete=models.CASCADE)
+
+
+	timestamp				=			models.DateTimeField(auto_now=False, auto_now_add=True)
+	updated					=			models.DateTimeField(auto_now=True, auto_now_add=False)
+
+	def __str__(self):
+		return(self.name + str(" By ") + self.user.username)
+
+	def get_absolute_url(self):
+		return reverse("user:product_detail", kwargs={"slug" : self.slug})
+
+
+	class Meta:
+		ordering	 		=			["-timestamp", "-updated"]
+		verbose_name 		= 			"List"
+		verbose_name_plural = 			"Lists"
+
+
+
+
 class product_catagory(models.Model):
 	PRODUCT_CAT = (
 		("Virtual Reality", "VR"),
@@ -135,17 +218,6 @@ class product_catagory(models.Model):
 		verbose_name 		= 			"Product Catagory"
 		verbose_name_plural = 			"Product Catagories"
 
-class anon_user_detail(models.Model):
-	CONTACTS_LIST = (
-		('Twitter', 'twitter'),
-		('e-mail', 'email'),
-		)
-	contact					=			models.CharField(max_length=200, blank=False, null=False)
-	contact_type			=			models.CharField(max_length=30, choices=CONTACTS_LIST, default=CONTACTS_LIST[0][0])
-	connected_product		=			models.ForeignKey('product', related_name='product_connected', on_delete=models.CASCADE, default=1)
-	
-	def __str__(self):
-		return(self.contact)
 
 class product(models.Model):
 	REV_INFO_SOURCE = (
@@ -317,7 +389,28 @@ def pre_save_catagory(sender, instance, *args, **kwargs):
 	if not instance.slug:
 		instance.slug = slug_for_catagory(instance)
 
+# SLUG FOR LIST
+def slug_for_list(instance, new_slug=None):
+	slug = slugify(instance.name)
+	if new_slug is not None:
+		slug = new_slug
+	qs = list_items.objects.filter(slug=slug).order_by("-id")
+	exists = qs.exists()
+	if exists:
+		# print("slug: " + str(slug))
+		a = slug.split('-')
+		# print("a: " + str(a[0]))
+		new_slug = "%s-%s" %(a[0], qs.first().id)
+		# print("new_slug: " + str(new_slug))
+		# new_slug = "%s-%s" %(slug, qs.first().id)
+		return slug_for_list(instance, new_slug=new_slug)
+	return slug
+def pre_save_list(sender, instance, *args, **kwargs):
+	if not instance.slug:
+		instance.slug = slug_for_list(instance)
+
 
 pre_save.connect(pre_save_group, sender=product)
 pre_save.connect(pre_save_tag, sender=tags)
 pre_save.connect(pre_save_catagory, sender=product_catagory)
+pre_save.connect(pre_save_list, sender=list_items)

@@ -12,10 +12,21 @@
 					</li>
 					{% endif %}
 					{% if request.user.is_superuser %}
-					<li class="nav-item">
-						<a class="nav-link" href="{% url 'user:admin_create_product' request.user.username %}">Anonymous create</a>
-					</li>
+					<li class="nav-item dropdown">
+						<a class="nav-link dropdown-toggle" href="" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+							Super Create
+						</a>
+						<div class="dropdown-menu" aria-labelledby="navbarDropdown">
+							<a class="dropdown-item" href="{% url 'user:admin_create_product' request.user.username %}">
+								<i class="fa fa-user fa-fw" aria-hidden="true"></i>&nbsp; Anonymous create</a>
+							<a class="dropdown-item" href="{% url 'list_one_new' %}">
+								<i class="fa fa-cog fa-fw" aria-hidden="true"></i>&nbsp; New $ item </a>
+						</div>
+					</li>					
 					{% endif %}
+					<li class="nav-item">
+						<a class="nav-link" href="{% url 'list_one' %}">List</a>
+					</li>					
 				</ul>
 				<ul class="navbar-nav ml-auto">
 					<li class="nav-item">

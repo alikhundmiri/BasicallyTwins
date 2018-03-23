@@ -1,7 +1,7 @@
 from django.contrib import admin
 
 # Register your models here.
-from .models import product, links, tags, adverts, email_list, product_catagory, revenue_source, anon_user_detail
+from .models import product, links, tags, adverts, email_list, product_catagory, revenue_source, anon_user_detail, list_items
 
 class ProductAdmin(admin.ModelAdmin):
 	list_display = ['user', 'product_name', 'product_verified', 'catagory', 'no_spam']
@@ -45,7 +45,14 @@ class AnonUserAdmin(admin.ModelAdmin):
 	list_filter = ['contact','contact_type', 'connected_product']
 	search_fields = ['contact','contact_type', 'connected_product']
 
+class ListAdmin(admin.ModelAdmin):
+	list_display = ['user','name', 'detail', 'link', 'public_view']
+	list_filter = ['user','name', 'detail', 'link', 'public_view']
+	search_fields = ['user','name', 'detail', 'link', 'public_view']
+	list_editable = ['public_view']
 
+
+admin.site.register(list_items, ListAdmin)
 admin.site.register(anon_user_detail, AnonUserAdmin)
 admin.site.register(revenue_source, RevenueSourceAdmin)
 admin.site.register(adverts, AdvertAdmin)
